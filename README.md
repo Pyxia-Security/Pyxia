@@ -28,4 +28,4 @@ No warranties are given. The license may not give you all of the permissions nec
 
 ### Deed: [https://creativecommons.org/licenses/by/4.0/](https://creativecommons.org/licenses/by/4.0/)
 
-License Terms: [https://github.com/Pyxia-Security/Pyxia/blob/main/LICENSE](https://github.com/Pyxia-Security/Pyxia/blob/main/LICENSE)
+### License Terms: [https://github.com/Pyxia-Security/Pyxia/blob/main/LICENSE](https://github.com/Pyxia-Security/Pyxia/blob/main/LICENSE)
