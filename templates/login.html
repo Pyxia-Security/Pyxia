@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pyxia | Log In</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    </head>
+    <body>
+        <h1 class="name">Log In</h1>
+        <div class="login">
+            <form method="post" action="/login">
+                <input class="loginusername" type="username" placeholder="Username" name="username">
+                <br><br>
+                <input class="loginpassword" type="password" placeholder="Password" name="password">
+                <br><br>
+                <input class="loginenter" type="submit" value="Login">
+            </form>
+            <p>Don't have an account? <a href="/signup">Create one here</a></p>
+        </div>
+    </body>
+</html>

@@ -3,9 +3,13 @@
     <head>
         <title>Pyxia</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
         <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
     </head>
     <body>
         <h1 class="name">Pyxia</h1>
+        {% if current_user.is_authenticated == True %}
+            <h2>Logged in as {{ current_user.id }}</h1>
+        {% endif %}
     </body>
 </html>
