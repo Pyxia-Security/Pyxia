@@ -3,15 +3,21 @@ from flask import Flask, render_template, redirect, request, session, abort
 from testdatabase import *
 import os, flask_login
 from flask_login import current_user
+from database import Userdb, db
+from decouple import config
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32).hex()
+app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql:///{config("NAME")}:{config("PASSWORD")}@localhost:{config("PORT")}/{config("DATABASE")}"
+db.init_app(app)
 login_manager = flask_login.LoginManager()
-
 login_manager.init_app(app)
 
 class User(flask_login.UserMixin):
     pass
+
+with app.app_context():
+    db.create_all()
 
 @login_manager.user_loader
 def user_loader(username):
@@ -101,7 +107,7 @@ def unauthorized_handler(e):
 
 @app.route("/teapot")
 def teapoteasteregg():
-    abort(418)
+    abort(405)
 
 if __name__ == "__main__":
     # deepcode ignore RunWithDebugTrue: disable debug in final project, as is for testing/debugging purposes.

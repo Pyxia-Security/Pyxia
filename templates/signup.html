@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pyxia | Sign Up</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
+    </head>
+    <body>
+        <h1 class="name">Sign Up</h1>
+        <div class="login">
+            <form method="post" action="/signup">
+                <input class="loginemail" type="email" placeholder="Email" name="email">
+                <br><br>
+                <input class="loginusername" type="username" placeholder="Username" name="username">
+                <br><br>
+                <input class="loginpassword" type="password" placeholder="Password" name="password">
+                <br><br>
+                <input class="loginconfpassword" type="password" placeholder="Confirm Password" name="confirm-password">
+                <br><br>
+                <input class="loginenter" type="submit" value="Login">
+            </form>
+            {% if error == True %}
+                <p>Your Username or Password was incorrect.</p>
+            {% endif %}
+            <p>Have an account? <a href="/login">Login Here</a></p>
+        </div>
+    </body>
+</html>
