@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, abort
 from testdatabase import *
 import os, flask_login
 from flask_login import current_user
@@ -33,6 +33,7 @@ def request_loader(request):
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    session['error'] = "False"
     return render_template("index.html")
 
 
@@ -41,22 +42,31 @@ def login():
     if request.method == "GET":
         if current_user.is_authenticated == True:
             return redirect('/')
-        return render_template("login.html")
+        if 'error' in session:
+            if session['error'] == "True":
+                return render_template("login.html", error=True)
+            else:
+                return render_template("login.html", error=False)
+        return render_template("login.html", error=False)
     username = request.form.get('username')
     if username in users and request.form.get('password') == users[username]['password']:
         user = User()
         user.id = username
         flask_login.login_user(user)
+        session['error'] = "False"
         return redirect('/')
+    session['error'] = "True"
     return redirect('/login')
 
 @app.route('/logout')
 def logout():
+    session['error'] = "False"
     flask_login.logout_user()
     return redirect('/')
 
 @app.route('/signup')
 def signup():
+    session['error'] = "False"
     if current_user.is_authenticated == True:
             return redirect('/') 
     return render_template("signup.html")
@@ -85,6 +95,13 @@ def gone_handler(e):
 def intserverror_handler(e):
     return render_template("error/500.html"), 500
 
+@app.errorhandler(Exception)
+def unauthorized_handler(e):
+    return render_template("error/418.html", error=e), 418
+
+@app.route("/teapot")
+def teapoteasteregg():
+    abort(418)
 
 if __name__ == "__main__":
     # deepcode ignore RunWithDebugTrue: disable debug in final project, as is for testing/debugging purposes.

@@ -15,6 +15,9 @@
                 <br><br>
                 <input class="loginenter" type="submit" value="Login">
             </form>
+            {% if error == True %}
+                <p>Your Username or Password was incorrect.</p>
+            {% endif %}
             <p>Don't have an account? <a href="/signup">Create one here</a></p>
         </div>
     </body>
