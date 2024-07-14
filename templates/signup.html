@@ -17,11 +17,15 @@
                 <br><br>
                 <input class="loginconfpassword" type="password" placeholder="Confirm Password" name="confirm-password">
                 <br><br>
+                {{ recaptcha }}
+                <br><br>
                 <input class="loginenter" type="submit" value="Login">
             </form>
             {% if error == True %}
-                <p>Your Username or Password was incorrect.</p>
+                <p>Your Passwords don't match.</p>
             {% endif %}
+            {% if already_exists == True %}
+                <p>The Email and/or Username already exists.</p>
             <p>Have an account? <a href="/login">Login Here</a></p>
         </div>
     </body>

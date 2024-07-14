@@ -13,12 +13,14 @@
                 <br><br>
                 <input class="loginpassword" type="password" placeholder="Password" name="password">
                 <br><br>
+                {{ recaptcha }}
+                <br><br>
                 <input class="loginenter" type="submit" value="Login">
             </form>
             {% if error == True %}
-                <p>Your Username or Password was incorrect.</p>
+                <p class="error">Your Username or Password was incorrect.</p>
             {% endif %}
-            <p>Don't have an account? <a href="/signup">Create one here</a></p>
+            <p>Don't have an account? <a href="/signup-ert">Create one here</a></p>
         </div>
     </body>
 </html>

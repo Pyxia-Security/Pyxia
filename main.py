@@ -3,38 +3,32 @@ from flask import Flask, render_template, redirect, request, session, abort
 from testdatabase import *
 import os, flask_login
 from flask_login import current_user
-from database import Userdb, db
+from database import db, Mapped, mapped_column
 from decouple import config
+from flask_recaptcha import ReCaptcha
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32).hex()
-app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql:///{config("NAME")}:{config("PASSWORD")}@localhost:{config("PORT")}/{config("DATABASE")}"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{config("NAME")}:{config("PASSWORD")}@localhost:{config("PORT")}/{config("DATABASE")}"
+app.config["RECAPTCHA_SECRET_KEY"] = config("RECAPTCHA_SECRET_KEY")
+app.config["RECAPTCHA_SITE_KEY"] = config("RECAPTCHA_SITE_KEY")
+app.config["RECAPTCHA_ENABLED"] = config("RECAPTCHA_ENABLED")
+recaptcha = ReCaptcha(app=app)
 db.init_app(app)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
-class User(flask_login.UserMixin):
-    pass
-
-with app.app_context():
-    db.create_all()
+class User(db.Model, flask_login.UserMixin):
+    __tablename__ = "userdb"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str]
+    email: Mapped[str]
 
 @login_manager.user_loader
-def user_loader(username):
-    if username not in users:
-        return
-    user = User()
-    user.id = username
-    return user
-
-@login_manager.request_loader
-def request_loader(request):
-    username = request.form.get('username')
-    if username not in users:
-        return
-    
-    user = User()
-    user.id = username
+def user_loader(user_id):
+    user = db.get_or_404(User, int(user_id))
     return user
 
 @app.route("/", methods=['GET', 'POST'])
@@ -42,40 +36,91 @@ def index():
     session['error'] = "False"
     return render_template("index.html")
 
+def get_user(username):
+    return db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none()
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "GET":
         if current_user.is_authenticated == True:
             return redirect('/')
+        if 'robot' in session:
+            if session['robot'] == True:
+                return render_template("login.html", error=False, robot=True)
         if 'error' in session:
-            if session['error'] == "True":
-                return render_template("login.html", error=True)
-            else:
-                return render_template("login.html", error=False)
-        return render_template("login.html", error=False)
-    username = request.form.get('username')
-    if username in users and request.form.get('password') == users[username]['password']:
-        user = User()
-        user.id = username
-        flask_login.login_user(user)
-        session['error'] = "False"
-        return redirect('/')
-    session['error'] = "True"
-    return redirect('/login')
-
+            if session['error'] == "True" or session['error'] == True:
+                return render_template("login.html", error=True, robot=True)
+        return render_template("login.html", error=False, robot=False)
+    else:
+        if recaptcha.verify():
+            username = request.form.get('username')
+            try:
+                user = get_user(username)
+                if user == None or user == "None":
+                    session['error'] = True
+                    session['robot'] = False
+                    return redirect('/login')
+                if user.password == request.form.get('password'):
+                    flask_login.login_user(user)
+                    session['error'] = "False"
+                    session['robot'] = False
+                    return redirect('/')
+                else:
+                    session['error'] = True
+                    session['error'] = False
+                    return redirect('/login')
+            except Exception as e:
+                print(e)
+                abort(500)
+        else:
+            session['robot'] = True
+            redirect('/login')
+        
+            
 @app.route('/logout')
 def logout():
     session['error'] = "False"
     flask_login.logout_user()
     return redirect('/')
 
-@app.route('/signup')
-def signup():
+@app.route('/signup-ert')
+def signup_ert():
     session['error'] = "False"
-    if current_user.is_authenticated == True:
-            return redirect('/') 
-    return render_template("signup.html")
+    return redirect('/signup')
+
+@app.route('/login-ert')
+def login_ert():
+    session['error'] = "False"
+    return redirect('/login')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == "GET":
+        if current_user.is_authenticated == True:
+                return redirect('/') 
+        if 'error' in session:
+            if session['error'] == True:
+                return render_template("signup.html", error=True)
+        return render_template("signup.html", error=False)
+    else:
+        if recaptcha.verify():
+            email = request.form.get('email')
+            username = request.form.get('username')
+            if request.form.get('password') == request.form.get('confirm-password'):
+                session['error'] = True
+                return redirect('/signup')
+            else:
+                user = User(
+                    email=email,
+                    username=username,
+                    password=request.form.get('password')
+                )
+                db.session.add(user)
+                db.session.commit()
+                return redirect('/login-ert')
+        else:
+            session['robot'] = True
+            redirect('/signup')
 
 @login_manager.unauthorized_handler
 def login_unauthorized_handler():

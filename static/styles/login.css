@@ -2,3 +2,11 @@ h1,
 .login {
     text-align: center;
 }
+
+.error {
+    color: red;
+}
+
+.g-recaptcha {
+    text-align: center;
+}

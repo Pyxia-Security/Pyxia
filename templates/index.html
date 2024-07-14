@@ -9,7 +9,7 @@
     <body>
         <h1 class="name">Pyxia</h1>
         {% if current_user.is_authenticated == True %}
-            <h2>Logged in as {{ current_user.id }}</h1>
+            <h2>Logged in as {{ current_user.username }}</h1>
         {% endif %}
     </body>
 </html>
