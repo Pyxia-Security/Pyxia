@@ -1,0 +1,16 @@
+.error {
+    color: red;
+}
+
+.g-recaptcha {
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center_div {
+    text-align: center;
+    display: block;
+    margin : auto;
+}
+

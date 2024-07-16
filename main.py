@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, redirect, request, session, abort
-from testdatabase import *
 import os, flask_login
 from flask_login import current_user
 from database import db, Mapped, mapped_column
 from decouple import config
-from flask_recaptcha import ReCaptcha
+from lib.flask_recaptcha import ReCaptcha
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32).hex()
@@ -33,12 +32,20 @@ def user_loader(user_id):
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    session['error'] = "False"
+    session['error'] = False
+    session['already_exists'] = False
+    session['robot'] = False
     return render_template("index.html")
 
 def get_user(username):
     return db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none()
 
+def check_user(username):
+    return db.session.query(db.exists().where(User.username==username)).scalar()
+
+def check_email(email):
+    return db.session.query(db.exists().where(User.email==email)).scalar()
+    
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "GET":
@@ -67,30 +74,34 @@ def login():
                     return redirect('/')
                 else:
                     session['error'] = True
-                    session['error'] = False
                     return redirect('/login')
             except Exception as e:
                 print(e)
                 abort(500)
         else:
             session['robot'] = True
-            redirect('/login')
-        
+            return redirect('/login')
             
 @app.route('/logout')
 def logout():
-    session['error'] = "False"
+    session['error'] = False
+    session['already_exists'] = False
+    session['robot'] = False
     flask_login.logout_user()
     return redirect('/')
 
 @app.route('/signup-ert')
 def signup_ert():
-    session['error'] = "False"
+    session['error'] = False
+    session['already_exists'] = False
+    session['robot'] = False
     return redirect('/signup')
 
 @app.route('/login-ert')
 def login_ert():
-    session['error'] = "False"
+    session['error'] = False
+    session['already_exists'] = False
+    session['robot'] = False
     return redirect('/login')
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -100,16 +111,30 @@ def signup():
                 return redirect('/') 
         if 'error' in session:
             if session['error'] == True:
-                return render_template("signup.html", error=True)
-        return render_template("signup.html", error=False)
+                return render_template("signup.html", error=True, already_exists=False)
+        if 'already_exists' in session:
+            if session['already_exists'] == True:
+                return render_template("signup.html", error=False, already_exists=True)
+        return render_template("signup.html", error=False, already_exists=False)
     else:
         if recaptcha.verify():
             email = request.form.get('email')
             username = request.form.get('username')
-            if request.form.get('password') == request.form.get('confirm-password'):
+            chkemail = check_email(email)
+            if chkemail == True or chkemail == "True":
+                session['already_exists'] = True
+                return redirect('/signup')
+            chkusr = check_user(username)
+            if chkusr == True or chkusr == "True":
+                session['already_exists'] = True
+                return redirect('/signup')
+            if request.form.get('password') != request.form.get('confirm-password'):
                 session['error'] = True
                 return redirect('/signup')
             else:
+                session['error'] = False
+                session['already_exists'] = False
+                session['robot'] = False
                 user = User(
                     email=email,
                     username=username,

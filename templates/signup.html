@@ -6,27 +6,27 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
     </head>
     <body>
-        <h1 class="name">Sign Up</h1>
+        <h1 class="name center">Sign Up</h1>
         <div class="login">
             <form method="post" action="/signup">
-                <input class="loginemail" type="email" placeholder="Email" name="email">
-                <br><br>
-                <input class="loginusername" type="username" placeholder="Username" name="username">
-                <br><br>
-                <input class="loginpassword" type="password" placeholder="Password" name="password">
-                <br><br>
-                <input class="loginconfpassword" type="password" placeholder="Confirm Password" name="confirm-password">
-                <br><br>
+                <input class="loginemail center_div" type="email" placeholder="Email" name="email">
+                <br>
+                <input class="loginusername center_div" type="username" placeholder="Username" name="username">
+                <br>
+                <input class="loginpassword center_div" type="password" placeholder="Password" name="password">
+                <br>
+                <input class="loginconfpassword center_div" type="password" placeholder="Confirm Password" name="confirm-password">
+                <br>
                 {{ recaptcha }}
-                <br><br>
-                <input class="loginenter" type="submit" value="Login">
+                <br>
+                <input class="loginenter center_div" type="submit" value="Signup">
             </form>
             {% if error == True %}
-                <p>Your Passwords don't match.</p>
+                <p class="error center">Your Passwords don't match.</p>
+            {% elif already_exists == True %}
+                <p class="error center">The Email and/or Username already exists.</p>
             {% endif %}
-            {% if already_exists == True %}
-                <p>The Email and/or Username already exists.</p>
-            <p>Have an account? <a href="/login">Login Here</a></p>
+            <p class="center">Have an account? <a href="/login-ert">Login Here</a></p>
         </div>
     </body>
 </html>

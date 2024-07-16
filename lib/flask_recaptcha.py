@@ -1,6 +1,9 @@
 """
 The new Google ReCaptcha implementation for Flask without Flask-WTF
 Can be used as standalone
+
+This has been modified by @OfficialJavaScript to fix a missing dependancy, this fix was first raised by Pritam on Stackoverflow: https://stackoverflow.com/questions/71804258/flask-app-nameerror-name-markup-is-not-defined
+
 """
 
 __NAME__ = "Flask-ReCaptcha"
@@ -26,7 +29,6 @@ class DEFAULTS(object):
 
 
 class ReCaptcha(object):
-
     VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
     site_key = None
     secret_key = None
@@ -46,6 +48,9 @@ class ReCaptcha(object):
             self.init_app(app=app)
 
     def init_app(self, app=None):
+        if app is None: # Fixed by SNYK to mitigate 'AttributeLoadOnNone: Accessing attribute context_processor on possibly None value' error.
+            raise ValueError("App cannot be none, make sure that app is defined.")
+        
         self.__init__(site_key=app.config.get("RECAPTCHA_SITE_KEY"),
                       secret_key=app.config.get("RECAPTCHA_SECRET_KEY"),
                       is_enabled=app.config.get("RECAPTCHA_ENABLED", DEFAULTS.IS_ENABLED),
