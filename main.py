@@ -6,6 +6,7 @@ from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32).hex()
 app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{config("NAME")}:{config("PASSWORD")}@localhost:{config("PORT")}/{config("DATABASE")}"
@@ -180,5 +181,6 @@ def teapoteasteregg():
     abort(405)
 
 if __name__ == "__main__":
+    context = ('server.crt', 'server.key')
     # deepcode ignore RunWithDebugTrue: disable debug in final project, as is for testing/debugging purposes.
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True, ssl_context=context)
