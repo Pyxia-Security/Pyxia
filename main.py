@@ -38,12 +38,6 @@ def index():
     session['robot'] = False
     return render_template("index.html")
 
-@app.route("/a")
-def home():
-    if current_user.is_authenticated == True:
-        return redirect('/')
-    return render_template("anonymous.html")
-
 def get_user(username):
     return db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none()
 
