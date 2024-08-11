@@ -5,6 +5,7 @@ from flask_login import current_user
 from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
+from user_agents import parse
 
 
 app = Flask(__name__)
@@ -20,7 +21,6 @@ login_manager.init_app(app)
 
 class User(db.Model, flask_login.UserMixin):
     __tablename__ = "userdb"
-    
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
@@ -36,7 +36,31 @@ def index():
     session['error'] = False
     session['already_exists'] = False
     session['robot'] = False
-    return render_template("index.html")
+    get_user_agent()
+    return render_template("index.html", yes=session["device_type"])
+
+def check_sessionvar_exist(variable):
+    if variable in session:
+        if session[f"{variable}"] != "":
+            return True
+        
+def get_user_agent():
+    if "user_agent" in session:
+        if session["user_agent"] != "":
+            return session["user_agent"]
+    user_agent = request.headers.get('User-Agent')
+    user_agent_parsed = parse(user_agent)
+    session["device_type"] = ("mobile" if user_agent_parsed.is_mobile else "desktop")
+
+@app.route("/test_mobile_and_pc")
+def tester_site():
+    return render_template("tester2.html")
+
+@app.route("/a")
+def home():
+    if current_user.is_authenticated == True:
+        return redirect('/')
+    return render_template("anonymous.html")
 
 def get_user(username):
     return db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none()

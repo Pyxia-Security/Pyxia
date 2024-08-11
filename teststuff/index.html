@@ -1,24 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html id="website"> <!-- Remember to remove id="website", for testing purposes.-->
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+        <link rel="stylesheet" href="style/smaller.css">
         <link rel="stylesheet" href="style/index.css">
     </head>
     <body>
         <header>
             <div class="header-container">
-                <button class="menu-open"><img width="50px" src="images/navigation.png"></button>
+                <button class="menu-open"><img width="50vw" src="images/exit.png"></button>
                 <button class="account-button"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="images/profile.png"></button>
-                <button class="notification"><img width="50px" src="images/notification.png"></button>
-                <button class="search"><img width="50px" src="images/search.png"></button>
+                <button class="notification"><img width="50vw" src="images/notification.png"></button>
+                <button class="search"><img width="50vw" src="images/search.png"></button>
             </div>
         </header>
         <div class="container">
             <div class="side-bar">
-                
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button"><img class="sidebar-button-image" src="images/home.png" width="50vw">
+                            <p class="sidebar-button-text">Home</p>
+                    </button>
+                    <button class="sidebar-button"><img class="sidebar-button-image" src="images/friends.png" width="50vw">
+                        <p class="sidebar-button-text">Friends</p>
+                    </button>
+                    <button class="sidebar-button"><img class="sidebar-button-image" src="images/trending.png" width="50vw">
+                        <p class="sidebar-button-text">Trending</p>
+                    </button>
+                    <button class="sidebar-button"><img class="sidebar-button-image" src="images/clips.png" width="50vw">
+                        <p class="sidebar-button-text">Clips</p>
+                    </button>
+                </div>
+            </div>
+            <div class="post-container">
+                <div class="post-wrapper">
+                    <div class="posts">
+                        <div class="post">
+                            <div class="post-user-account">
+                                <img class="post-username-image" height="75vh" src="images/profile.png">
+                                <h2 class="post-username-text">Person 1</h2>
+                                <h3 class="posted-date">30s ago</h3>
+                            </div>
+                            <div class="post-image-container">
+                                <img height="auto" class="post-image" src="images/testpost.png">
+                            </div>
+                            <div class="post-interaction">
+                                <button class="post-interact-button"><img height="50vh" src="images/like.png"></button>
+                                <button class="post-interact-button post-bookmark-button"><img height="50vh" src="images/bookmark.png"></button>
+                                <button class="post-interact-button post-share-button"><img height="50vh" src="images/share.png"></button>
+                            </div>
+                            <div class="comment-button">
+                                <button class="post-comment-button"><h2>Comments (0)</h2></button>
+                            </div>
+                        </div>
+                        <div class="posts">
+                            <div class="post">
+                                <div class="post-user-account">
+                                    <img class="post-username-image" height="75vh" src="images/profile.png">
+                                    <h2 class="post-username-text">Person 1</h2>
+                                    <h3 class="posted-date">30s ago</h3>
+                                </div>
+                                <div class="post-image-container">
+                                    <img height="auto" class="post-image" src="images/testpost.png">
+                                </div>
+                                <div class="post-interaction">
+                                    <button class="post-interact-button"><img height="50vh" src="images/like.png"></button>
+                                    <button class="post-interact-button post-bookmark-button"><img height="50vh" src="images/bookmark.png"></button>
+                                    <button class="post-interact-button post-share-button"><img height="50vh" src="images/share.png"></button>
+                                </div>
+                                <div class="comment-button">
+                                    <button class="post-comment-button"><h2>Comments (0)</h2></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="posts">
+                            <div class="post">
+                                <div class="post-user-account">
+                                    <img class="post-username-image" height="75vh" src="images/profile.png">
+                                    <h2 class="post-username-text">Person 1</h2>
+                                    <h3 class="posted-date">30s ago</h3>
+                                </div>
+                                <div class="post-image-container">
+                                    <img height="auto" class="post-image" src="images/testpost.png">
+                                </div>
+                                <div class="post-interaction">
+                                    <button class="post-interact-button"><img height="50vh" src="images/like.png"></button>
+                                    <button class="post-interact-button post-bookmark-button"><img height="50vh" src="images/bookmark.png"></button>
+                                    <button class="post-interact-button post-share-button"><img height="50vh" src="images/share.png"></button>
+                                </div>
+                                <div class="comment-button">
+                                    <button class="post-comment-button"><h2>Comments (0)</h2></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-menu">
+                <form class="right-menu-form">
+                    <div class="right-menu-search-container">
+                        <div class="right-menu-input-wrapper">
+                            <img class="right-menu-search-icon" width="50vw" src="images/search.png">
+                            <input class="right-menu-search" type="text" placeholder="Search">
+                        </div>
+                    </div>
+                </form>
+                <div class="right-menu-users">
+                    <div class="right-menu-user-container">
+                        <img class="right-user-profile" height="75vh" src="images/profile.png"><h2 class="right-menu-username">Person 1</h2>
+                    </div>
+                    <div class="right-menu-user-container">
+                        <img class="right-user-profile" height="75vh" src="images/profile.png"><h2 class="right-menu-username">Person 2</h2>
+                    </div>
+                    <div class="right-menu-user-container">
+                        <img class="right-user-profile" height="75vh" src="images/profile.png"><h2 class="right-menu-username">Person 3</h2>
+                    </div>
+                    <div class="right-menu-user-container">
+                        <img class="right-user-profile" height="75vh" src="images/profile.png"><h2 class="right-menu-username">Person 4</h2>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

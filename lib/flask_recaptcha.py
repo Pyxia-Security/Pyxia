@@ -43,9 +43,9 @@ class ReCaptcha(object):
             self.type = kwargs.get('type', DEFAULTS.TYPE)
             self.size = kwargs.get('size', DEFAULTS.SIZE)
             self.tabindex = kwargs.get('tabindex', DEFAULTS.TABINDEX)
-
         elif app:
             self.init_app(app=app)
+            return None
 
     def init_app(self, app=None):
         if app is None: # Fixed by SNYK to mitigate 'AttributeLoadOnNone: Accessing attribute context_processor on possibly None value' error.

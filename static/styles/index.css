@@ -1,3 +1,31 @@
+.center,
 .name {
     text-align: center;
+}
+
+button {
+    border-radius: 10px;
+    background-color: #DBAFA0;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: black;
+    width: 200px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.acc-view-options {
+    display: flex;
+    justify-content: center;
+}
+
+.button-one {
+    margin-right: 10px;
 }

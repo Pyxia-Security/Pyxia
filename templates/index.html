@@ -4,12 +4,25 @@
         <title>Pyxia</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
-        <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        {% if current_user.is_authenticated == True %}
+            <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        {% else %}
+            <script src="{{ url_for('static', filename='scripts/unauthed.js') }}"></script>
+        {% endif %}
     </head>
     <body>
         <h1 class="name">Pyxia</h1>
+        <h1>{{ yes }}</h1>
         {% if current_user.is_authenticated == True %}
-            <h2>Logged in as {{ current_user.username }}</h1>
+            <h2 class="center">Welcome Back!</h2>
+        {% else %}
+            <div class="unauthed-container">
+                <h2 class="center">Welcome! How would you like to scroll today?</h2>
+                <div class="acc-view-options">
+                    <button onclick="login()" class="inline button-one">Login</button>
+                    <button onclick="anonymous()" class="inline">Anonymous</button>
+                </div>
+            </div>
         {% endif %}
     </body>
 </html>
