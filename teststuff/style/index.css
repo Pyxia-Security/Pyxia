@@ -60,12 +60,16 @@ body {
     font-size: 5vh;
     padding-right: 1vw;
     padding-left: 1vw;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .profile-picture {
     padding-right: 1vw;
     margin-top: auto;
     margin-bottom: auto;
+    height: 100%;
+    border-radius: 50%;
 }
 
 .container {
@@ -81,6 +85,10 @@ body {
     height: 90vh;
     border-right: solid black 2px;
     border-bottom: solid black 2px;
+}
+
+.account-dropdown {
+    position: fixed;
 }
 
 
@@ -108,9 +116,6 @@ body {
     .sidebar-button-image {
         width: 3.5vw;
     }
-    .right-menu-search-icon {
-        width: 3.5vw
-    }
 }
 
 @media (max-width: 1899px) {
@@ -122,69 +127,6 @@ body {
 .sidebar-button-text {
     font-size: 3vh;
     margin-top: 1vh;
-}
-
-.right-menu {
-    margin-left: auto;
-    margin-top: 2vh;
-    border-radius: 10px;
-    border: solid black 2px;
-    width: 22vw;
-    background-color: #704264;
-    height: 86vh;
-}
-
-.right-menu-search {
-    height: 7vh;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 2vh;
-    width: 18vw;
-    background-color: #DBAFA0;
-    padding-left: 3.5vw;
-    font-size: 4vh;
-    color: black;
-    border-radius: 10px;
-    border: solid black 2px;
-}
-
-.right-menu-search::placeholder {
-    color: black;
-}
-
-.right-menu-input-wrapper .right-menu-search-icon {
-    position: absolute;
-    padding-top: 2vh;
-    min-width: 40px;
-}
-
-.right-menu-search-container {
-    display: flex;
-}
-
-.right-menu-input-wrapper {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.right-menu-users {
-    padding-top: 1vh;
-    padding-left: 1.5vw;
-}
-
-.right-menu-user-area {
-    width: 20vw;
-}
-
-.right-menu-user-container {
-    display: flex;
-    padding-top: 2vh;
-}
-
-.right-menu-username {
-    padding-left: 1vw;
-    padding-bottom: auto;
-    color: black;
 }
 
 .post-container {
@@ -273,4 +215,10 @@ body {
     border: none;
     margin-left: 1vh;
     margin-bottom: 1vh;
+}
+
+.text-center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }

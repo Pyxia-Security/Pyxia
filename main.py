@@ -31,13 +31,22 @@ def user_loader(user_id):
     user = db.get_or_404(User, int(user_id))
     return user
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['GET'])
 def index():
     session['error'] = False
     session['already_exists'] = False
     session['robot'] = False
     get_user_agent()
     return render_template("index.html", yes=session["device_type"])
+
+@app.route("/main", methods=['GET'])
+def scroll():
+    session['error'] = False
+    session['already_exists'] = False
+    session['robot'] = False
+    if current_user.is_authenticated == False:
+            return redirect('/')
+    return render_template("main.html")
 
 def check_sessionvar_exist(variable):
     if variable in session:
