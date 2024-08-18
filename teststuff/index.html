@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-nz">
+<html lang="en-nz" id="html">
     <head>
         <title>Main | Pyxia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,10 +12,16 @@
             <div class="header-container">
                 <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="images/exit.png" id="opencloseImage"></button>
                 <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="images/profile.png"></button>
-                <button class="notification" onclick="notification()"><img width="50vw" src="images/notification.png"></button>
+                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="images/notification.png"></button>
                 <button class="search" onclick="search()"><img width="50vw" src="images/search.png"></button> 
             </div>
         </header>
+        <div id="notification-overlay">
+            <div class="notification-overlay">
+                <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="images/exit.png"></button>
+                <iframe class="iframe-notification-overlay" src="notifications.html"></iframe>
+            </div>
+        </div>
         <div class="container">
             <div class="side-bar" id="sidebar-container">
                 <div class="sidebar-button-div" id="sidebar">
@@ -42,8 +48,16 @@
                                 <h2 class="post-username-text">Person 1</h2>
                                 <h3 class="posted-date">30s ago</h3>
                             </div>
+                            <div class="post-title">
+                                <a href="post/1" class="post-title-link"><h2>Post 1</h1></a>
+                            </div>
                             <div class="post-image-container">
                                 <img height="auto" class="post-image" src="images/testpost.png">
+                            </div>
+                            <div class="post-description">
+                                <div class="post-description-container">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu efficitur nisi, quis ullamcorper orci. Sed facilisis varius ullamcorper. Suspendisse quis ligula pretium, ornare ligula id, ornare ex. Curabitur condimentum metus et accumsan efficitur. Nunc pharetra ex sit amet venenatis vulputate. Suspendisse potenti. Phasellus orci nisi, vulputate non mi quis, lobortis elementum eros.</p>
+                                </div>
                             </div>
                             <div class="post-interaction">
                                 <button class="post-interact-button"><img height="50vh" src="images/like.png"></button>
@@ -61,8 +75,16 @@
                                     <h2 class="post-username-text">Person 1</h2>
                                     <h3 class="posted-date">30s ago</h3>
                                 </div>
+                                <div class="post-title">
+                                    <a href="post/2" class="post-title-link"><h2>Post 2</h1></a>
+                                </div>
                                 <div class="post-image-container">
                                     <img height="auto" class="post-image" src="images/testpost.png">
+                                </div>
+                                <div class="post-description">
+                                    <div class="post-description-container">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu efficitur nisi, quis ullamcorper orci. Sed facilisis varius ullamcorper. Suspendisse quis ligula pretium, ornare ligula id, ornare ex. Curabitur condimentum metus et accumsan efficitur. Nunc pharetra ex sit amet venenatis vulputate. Suspendisse potenti. Phasellus orci nisi, vulputate non mi quis, lobortis elementum eros.</p>
+                                    </div>
                                 </div>
                                 <div class="post-interaction">
                                     <button class="post-interact-button"><img height="50vh" src="images/like.png"></button>
@@ -81,8 +103,16 @@
                                     <h2 class="post-username-text">Person 1</h2>
                                     <h3 class="posted-date">30s ago</h3>
                                 </div>
+                                <div class="post-title">
+                                    <a href="post/3" class="post-title-link"><h2>Post 3</h1></a>
+                                </div>
                                 <div class="post-image-container">
                                     <img height="auto" class="post-image" src="images/testpost.png">
+                                </div>
+                                <div class="post-description">
+                                    <div class="post-description-container">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu efficitur nisi, quis ullamcorper orci. Sed facilisis varius ullamcorper. Suspendisse quis ligula pretium, ornare ligula id, ornare ex. Curabitur condimentum metus et accumsan efficitur. Nunc pharetra ex sit amet venenatis vulputate. Suspendisse potenti. Phasellus orci nisi, vulputate non mi quis, lobortis elementum eros.</p>
+                                    </div>
                                 </div>
                                 <div class="post-interaction">
                                     <button class="post-interact-button"><img height="50vh" src="images/like.png"></button>

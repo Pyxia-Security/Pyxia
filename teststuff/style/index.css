@@ -47,9 +47,8 @@ body {
     background-color: #DBAFA0;
     display: flex;
     justify-content: center;
-    border-color: black;
     border-radius: 10px;
-    border-width: 2px;
+    border: solid black 2px;
     float: right;
     height: 8vh;
     margin-right: 1vw;
@@ -101,7 +100,7 @@ body {
     border-radius: 10px;
     background-color: #DBAFA0;
     border: solid 2px;
-    width: 11vw;
+    width: 12vw;
     height: 8vh;
     display: center;
     margin-left: 2vw;
@@ -112,13 +111,13 @@ body {
     float: left;
 }
 
-@media (min-width: 1900px) {
+@media (min-width: 1400px) {
     .sidebar-button-image {
         width: 3.5vw;
     }
 }
 
-@media (max-width: 1899px) {
+@media (max-width: 1300px) {
     .sidebar-button-image {
         width: 3vw;
     }
@@ -168,13 +167,39 @@ body {
 .post-username-image {
     margin-left: .5vw;
     margin-top: .5vw;;
-    margin-bottom: .5vw;;
+    margin-bottom: .5vw;
+}
+
+.post-title {
+    margin-top: 1vh;
+    padding-bottom: 1vh;
+    text-align: center;
+    border-bottom: solid gray 1px;
+}
+
+.post-title-link {
+    color: black;
+    text-decoration: none;
 }
 
 .post-image-container {
+    padding-top: 1vh;
+    padding-bottom: 1vh;
     display: flex;
     border-bottom: solid gray 1px;
     height: 30vh;
+}
+
+.post-description {
+    display: flex;
+    border-bottom: solid gray 1px;
+}
+
+.post-description-container {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
 }
 
 .post-interaction {
@@ -222,3 +247,41 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+
+#notification-overlay { 
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(100, 100, 100, 0.5);
+    z-index: 2;
+}
+
+.notification-overlay {
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+.iframe-notification-overlay {
+    margin-left: 10vw;
+    margin-right: 10vw;
+    margin-top: 5vw;
+    height: 80%;
+    width: 80%;
+    border: solid black 2px;
+    border-radius: 10px;
+}
+
+.notification-close {
+    position: absolute;
+    margin-left: 95%;
+    margin-top: 2vh;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+}
+

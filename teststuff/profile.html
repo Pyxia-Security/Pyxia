@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-nz" id="html">
+    <head>
+        <title>USERNAME | Pyxia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <script src="scripts/thejavasriptscript.js"></script>
+        <link rel="stylesheet" href="style/index.css">
+        <link rel="stylesheet" href="style/profile.css">
+    </head>
+    <body>
+        <header>
+            <div class="header-container">
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="images/exit.png" id="opencloseImage"></button>
+                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="images/profile.png"></button>
+                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="images/notification.png"></button>
+                <button class="search" onclick="search()"><img width="50vw" src="images/search.png"></button> 
+            </div>
+        </header>
+        <div id="notification-overlay">
+            <div class="notification-overlay">
+                <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="images/exit.png"></button>
+                <iframe class="iframe-notification-overlay" src="notifications.html"></iframe>
+            </div>
+        </div>
+        <div class="container">
+            <div class="side-bar" id="sidebar-container">
+                <div class="sidebar-button-div" id="sidebar">
+                    <button class="sidebar-button" onclick="home()"><img class="sidebar-button-image" src="images/home.png" width="50vw">
+                            <p class="sidebar-button-text">Home</p>
+                    </button>
+                    <button class="sidebar-button" onclick="friends()"><img class="sidebar-button-image" src="images/friends.png" width="50vw">
+                        <p class="sidebar-button-text">Friends</p>
+                    </button>
+                    <button class="sidebar-button" onclick="trending()"><img class="sidebar-button-image" src="images/trending.png" width="50vw">
+                        <p class="sidebar-button-text">Trending</p>
+                    </button>
+                    <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="images/clips.png" width="50vw">
+                        <p class="sidebar-button-text">Clips</p>
+                    </button>
+                </div>
+            </div>
+            <div class="profile-container">
+                <div class="profile-top">
+                    <div class="profile-top-wrapper">
+                        <img class="container-profile-picture" src="images/profile.png">
+                        <h2 class="container-profile-username">USERNAME</h2>
+                    </div>
+                </div>
+                <div class="profile-edit-description">
+                    <button class="edit-description-button">Edit Description</button>
+                </div>
+                <div class="profile-inner">
+                    <p class="profile-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent consectetur iaculis lorem, sed auctor nisi pretium a. Aenean id tristique risus. Sed non tellus sit amet nibh accumsan dignissim rutrum ac purus. Sed feugiat elit eu orci consequat, eget consectetur justo bibendum. Aenean mattis ante tortor, vel hendrerit leo convallis non. Nunc nec viverra odio. Vivamus justo mauris, eleifend id urna eget, pharetra porttitor nisl. Sed tempus non nibh non euismod. Praesent pulvinar sem ut tempor lacinia. Vivamus volutpat, tortor ac efficitur maximus, magna dolor egestas nulla, et sollicitudin justo orci sit amet mi. Nullam vel pharetra dolor.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

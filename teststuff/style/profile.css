@@ -1,0 +1,69 @@
+.profile-container {
+    width: 82vw;
+    display: block;
+}
+
+.profile-top {
+    height: 20vh;
+    margin-top: 2vh;
+    margin-left: .9vw;
+    margin-right: .9vw;
+    display: block;
+    background-color: #704264;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top: solid black 2px;
+    border-left: solid black 2px;
+    border-right: solid black 2px;
+}
+
+.profile-inner {
+    margin-left: .9vw;
+    margin-right: .9vw;
+    background-color: #704264;
+    font-size: large;
+    display: flex;
+    border-left: solid black 2px;
+    border-right: solid black 2px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom: solid black 2px;
+}
+
+.profile-description {
+    margin: 1vw;
+}
+
+.profile-top-wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+.container-profile-username {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1vw;
+    font-size: 5vh;
+}
+
+.container-profile-picture {
+    height: 15vh;
+    margin-left: 1vw;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.profile-edit-description {
+    width: 97.55%;
+    background-color: black;
+    margin-left: .9vw;
+    margin-right: .9vw;
+    background-color: #704264;
+    border-left: solid black 2px;
+    border-right: solid black 2px;
+}
+
+.edit-description-button {
+    margin-left: 1vw;
+}

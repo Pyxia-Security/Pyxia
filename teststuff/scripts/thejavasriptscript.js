@@ -26,6 +26,16 @@ function openclosemenu() {
     };
 };
 
+function notificationcloseMenu() {
+    document.getElementById("notification-overlay").style.display = "none";
+    document.getElementById("html").style.overflow = "auto";
+}
+
+function notificationopenMenu() {
+    document.getElementById("notification-overlay").style.display = "block";
+    document.getElementById("html").style.overflow = "hidden";
+}
+
 function profile() {
     location.href = "profile";
 };
@@ -38,7 +48,7 @@ function search() {
 };
 
 function home() {
-    location.href = "/";
+    location.href = "main";
 };
 
 function friends() {

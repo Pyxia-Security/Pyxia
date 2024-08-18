@@ -1,0 +1,132 @@
+.search-container {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: black;
+    width: 75vw;
+    margin-top: 4vh;
+    margin-bottom: 4vh;
+    background-color: #704264;
+    border: solid black 2px;
+    border-radius: 10px;
+}
+
+.search-input {
+    height: 10vh;
+    margin-top: 2vh;
+    width: 26vw;
+    background-color: #DBAFA0;
+    font-size: 6vh;
+    color: black;
+    border-radius: 10px;
+    border: solid black 2px;
+}
+
+.search-input::placeholder {
+    color: black;
+}
+.search-form {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    padding-top: 2vh;
+    min-width: 40px;
+}
+
+@media (max-width: 1300px) {
+    .search-icon {
+        width: 4.75vw;
+        padding-left: .5vw;
+    }
+
+    .search-input {
+        padding-left: 5.25vw;
+    }
+
+    .search-type-buttons {
+        height: 7vh;
+        width: 8vw;
+        font-size: 150%;
+    }
+}
+
+@media (min-width: 1400px) {
+    .search-icon {
+        width: 5.5vw;
+        padding-left: .5vw;
+    }
+
+    .search-input {
+        padding-left: 6vw;
+    }
+
+    .search-type-buttons {
+        height: 6vh;
+        width: 10vw;
+        font-size: 200%;
+    }
+}
+
+.search-type {
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    margin-top: 1vh;
+    border-bottom: solid black 1px;
+}
+
+.search-form-container {
+    display: flex;
+}
+
+.search-type-posts {
+    margin-left: auto;
+    background-color: #BB8493;
+}
+
+.search-type-people {
+    margin-right: auto;
+    margin-left: 1vw;
+    background-color: #DBAFA0;
+}
+
+.search-type-buttons { 
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 10px;
+    border: solid black 2px;
+}
+
+.sr-header {
+    font-size: 200%;
+    margin-left: 1vw;
+}
+
+.search-results {
+    margin-top: 2vh;
+}
+
+.result {
+    margin-top: 2vh;
+    background-color: #DBAFA0;
+    height: 7.5vh;
+    margin-left: 1.5vw;
+    margin-right: 1.5vw;
+    display: flex;
+    border: solid black 2px;
+    border-radius: 10px;
+}
+
+.result-text {
+    font-size: 200%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1vw;
+}
+
+.result-link {
+    color: black;
+    text-decoration: none;
+}

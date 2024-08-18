@@ -48,10 +48,10 @@ def scroll():
             return redirect('/')
     return render_template("main.html")
 
-def check_sessionvar_exist(variable):
-    if variable in session:
-        if session[f"{variable}"] != "":
-            return True
+#def check_sessionvar_exist(variable):
+ #   if variable in session:
+   #     if session[f"{variable}"] != "":
+  #          return True
         
 def get_user_agent():
     if "user_agent" in session:
