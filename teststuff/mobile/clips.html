@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en-nz">
+<html lang="en-nz" id="html">
     <head>
-        <title>Trending | Pyxia</title>
+        <title>Clips | Pyxia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <script src="scripts/thejavasriptscript.js"></script>
@@ -10,41 +10,58 @@
     <body>
         <header>
             <div class="header-container">
-                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="images/exit.png" id="opencloseImage" class="nav-icons"></button>
-                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="images/profile.png" class="nav-icons"></button>
-                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="images/notification.png" class="nav-icons"></button>
-                <button class="search" onclick="search()"><img width="50vw" src="images/search.png" class="nav-icons"></button> 
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="images/menu.png" id="opencloseImage"></button>
+                <h1 class="menu-name">Pyxia</h1>
+                <button class="account-button" onclick="profile()"><img class="profile-picture" height="45vh" src="images/profile.png"></button>            
             </div>
         </header>
-        <div id="notification-overlay">
-            <div class="notification-overlay">
-                <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="images/exit.png"></button>
-                <iframe class="iframe-notification-overlay" src="notifications.html"></iframe>
-            </div>
-        </div>
-        <div class="container">
-            <div class="side-bar" id="sidebar-container">
-                <div class="sidebar-button-div" id="sidebar">
-                    <button class="sidebar-button" onclick="home()"><img class="sidebar-button-image" src="images/home.png" width="50vw">
-                            <p class="sidebar-button-text">Home</p>
-                    </button>
-                    <button class="sidebar-button" onclick="friends()"><img class="sidebar-button-image" src="images/friends.png" width="50vw">
-                        <p class="sidebar-button-text">Friends</p>
-                    </button>
-                    <button class="sidebar-button" onclick="trending()"><img class="sidebar-button-image" src="images/trending.png" width="50vw">
-                        <p class="sidebar-button-text">Trending</p>
-                    </button>
-                    <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="images/clips.png" width="50vw">
-                        <p class="sidebar-button-text">Clips</p>
-                    </button>
+        <div class="side-bar" id="sidebar-container">
+            <div class="top-buttons-container">
+                <div class="top-buttons">
+                    <button class="menu-search" onclick="search()"><img width="60vw" src="images/search.png"></button> </button>
+                    <button class="menu-notification" onclick="notification()"><img width="60vw" src="images/notification.png"></button>
                 </div>
             </div>
+            <div class="sidebar-button-div">
+                <button class="sidebar-button" onclick="home()">
+                    <div class="inner-button-container">
+                        <img class="sidebar-button-image" src="images/home.png" width="50vw">
+                        <p class="sidebar-button-text">Home</p>
+                    </div>
+                </button>
+            </div>
+            <div class="sidebar-button-div">
+                <button class="sidebar-button" onclick="friends()">
+                    <div class="inner-button-container">
+                        <img class="sidebar-button-image" src="images/friends.png" width="50vw">
+                        <p class="sidebar-button-text">Friends</p>
+                    </div>
+                </button>
+            </div>
+            <div class="sidebar-button-div">
+                <button class="sidebar-button" onclick="trending()">
+                    <div class="inner-button-container">
+                        <img class="sidebar-button-image" src="images/trending.png" width="50vw">
+                        <p class="sidebar-button-text">Trending</p>
+                    </div>
+                </button>
+            </div>
+            <div class="sidebar-button-div">
+                <button class="sidebar-button" onclick="clips()">
+                    <div class="inner-button-container">
+                        <img class="sidebar-button-image" src="images/clips.png" width="50vw">
+                        <p class="sidebar-button-text">Clips</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="container" id="container">
             <div class="post-container">
                 <div class="post-wrapper">
                     <div class="posts">
                         <div class="post">
                             <div class="post-user-account">
-                                <img class="post-username-image" height="75vh" src="images/profile.png">
+                                <img class="post-username-image" height="55vh" src="images/profile.png">
                                 <h2 class="post-username-text">Person 1</h2>
                                 <h3 class="posted-date">30s ago</h3>
                             </div>
@@ -68,10 +85,11 @@
                                 <button class="post-comment-button"><h2>Comments (0)</h2></button>
                             </div>
                         </div>
+                        <hr>
                         <div class="posts">
                             <div class="post">
                                 <div class="post-user-account">
-                                    <img class="post-username-image" height="75vh" src="images/profile.png">
+                                    <img class="post-username-image" height="55vh" src="images/profile.png">
                                     <h2 class="post-username-text">Person 1</h2>
                                     <h3 class="posted-date">30s ago</h3>
                                 </div>
@@ -96,10 +114,11 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
                         <div class="posts">
                             <div class="post">
                                 <div class="post-user-account">
-                                    <img class="post-username-image" height="75vh" src="images/profile.png">
+                                    <img class="post-username-image" height="55vh" src="images/profile.png">
                                     <h2 class="post-username-text">Person 1</h2>
                                     <h3 class="posted-date">30s ago</h3>
                                 </div>
@@ -124,9 +143,10 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
                     </div>
                 </div>
-            </div>         
+            </div>            
         </div>
     </body>
 </html>

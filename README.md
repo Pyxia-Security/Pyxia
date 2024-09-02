@@ -4,7 +4,7 @@ Pyxia is a Privacy Focused, and Open Source Social Media, where we put Privacy b
 # Notice for running
 
 * You need to add a database for it to run, and will need to change configurations (mainly in main.py)
-* You will need to either get a self signed SSL Certificate (server.crt) and a Private key to go along with it (server.key)
+* You will need to either get a self signed SSL Certificate (server.crt) and a Private key to go along with it (server.key), or disable https, to do this remove `context = ('server.crt', 'server.key')` and change `app.run(host='0.0.0.0', port=80, ssl_context=context)` to `app.run(host='0.0.0.0', port=80)`
 * Make sure you run `pip3 install -r requirements.txt` There may be some requirements that haven't been added as I run this in an ENV and don't often need to reinstall things. 
 
 

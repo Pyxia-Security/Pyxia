@@ -11,12 +11,18 @@
     <body>
         <header>
             <div class="header-container">
-                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="images/exit.png" id="opencloseImage"></button>
-                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" src="images/profile.png"></button>
-                <button class="notification" onclick="notification()"><img width="50vw" src="images/notification.png"></button>
-                <button class="search" onclick="search()"><img width="50vw" src="images/search.png"></button> 
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="images/exit.png" id="opencloseImage" class="nav-icons"></button>
+                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="images/profile.png" class="nav-icons"></button>
+                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="images/notification.png" class="nav-icons"></button>
+                <button class="search" onclick="search()"><img width="50vw" src="images/search.png" class="nav-icons"></button> 
             </div>
         </header>
+        <div id="notification-overlay">
+            <div class="notification-overlay">
+                <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="images/exit.png"></button>
+                <iframe class="iframe-notification-overlay" src="notifications.html"></iframe>
+            </div>
+        </div>
         <div class="container">
             <div class="side-bar" id="sidebar-container">
                 <div class="sidebar-button-div" id="sidebar">

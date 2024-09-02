@@ -7,7 +7,6 @@ from decouple import config
 from lib.flask_recaptcha import ReCaptcha
 from user_agents import parse
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32).hex()
 app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{config("NAME")}:{config("PASSWORD")}@localhost:{config("PORT")}/{config("DATABASE")}"

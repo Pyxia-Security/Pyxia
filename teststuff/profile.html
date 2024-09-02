@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-nz" id="html">
     <head>
-        <title>USERNAME | Pyxia</title>
+        <title>NAME | Pyxia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <script src="scripts/thejavasriptscript.js"></script>
@@ -11,10 +11,10 @@
     <body>
         <header>
             <div class="header-container">
-                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="images/exit.png" id="opencloseImage"></button>
-                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="images/profile.png"></button>
-                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="images/notification.png"></button>
-                <button class="search" onclick="search()"><img width="50vw" src="images/search.png"></button> 
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="images/exit.png" id="opencloseImage" class="nav-icons"></button>
+                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="images/profile.png" class="nav-icons"></button>
+                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="images/notification.png" class="nav-icons"></button>
+                <button class="search" onclick="search()"><img width="50vw" src="images/search.png" class="nav-icons"></button> 
             </div>
         </header>
         <div id="notification-overlay">
@@ -41,17 +41,21 @@
                 </div>
             </div>
             <div class="profile-container">
-                <div class="profile-top">
-                    <div class="profile-top-wrapper">
-                        <img class="container-profile-picture" src="images/profile.png">
-                        <h2 class="container-profile-username">USERNAME</h2>
+                <div class="profile-wrapper">
+                    <div class="profile-top">
+                        <div class="profile-top-wrapper">
+                            <img class="container-profile-picture" src="images/profile.png">
+                            <h2 class="container-profile-username">NAME</h2>
+                        </div>
                     </div>
-                </div>
-                <div class="profile-edit-description">
-                    <button class="edit-description-button">Edit Description</button>
-                </div>
-                <div class="profile-inner">
-                    <p class="profile-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent consectetur iaculis lorem, sed auctor nisi pretium a. Aenean id tristique risus. Sed non tellus sit amet nibh accumsan dignissim rutrum ac purus. Sed feugiat elit eu orci consequat, eget consectetur justo bibendum. Aenean mattis ante tortor, vel hendrerit leo convallis non. Nunc nec viverra odio. Vivamus justo mauris, eleifend id urna eget, pharetra porttitor nisl. Sed tempus non nibh non euismod. Praesent pulvinar sem ut tempor lacinia. Vivamus volutpat, tortor ac efficitur maximus, magna dolor egestas nulla, et sollicitudin justo orci sit amet mi. Nullam vel pharetra dolor.</p>
+                    <div class="profile-edit-description">
+                        <button class="edit-button">Edit Description</button>
+                        <button class="edit-button">Change Profile Picture</button>
+                        <button class="edit-button">Account Settings</button>
+                    </div>
+                    <div class="profile-inner">
+                        <p class="profile-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent consectetur iaculis lorem, sed auctor nisi pretium a. Aenean id tristique risus. Sed non tellus sit amet nibh accumsan dignissim rutrum ac purus. Sed feugiat elit eu orci consequat, eget consectetur justo bibendum. Aenean mattis ante tortor, vel hendrerit leo convallis non. Nunc nec viverra odio. Vivamus justo mauris, eleifend id urna eget, pharetra porttitor nisl. Sed tempus non nibh non euismod. Praesent pulvinar sem ut tempor lacinia. Vivamus volutpat, tortor ac efficitur maximus, magna dolor egestas nulla, et sollicitudin justo orci sit amet mi. Nullam vel pharetra dolor.</p>
+                    </div>
                 </div>
             </div>
         </div>

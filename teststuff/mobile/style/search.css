@@ -2,9 +2,9 @@
     margin-left: auto;
     margin-right: auto;
     background-color: black;
-    width: 75vw;
+    width: 90vw;
     margin-top: 4vh;
-    margin-bottom: 4vh;
+    padding-bottom: 4vh;
     background-color: #704264;
     border: solid black 2px;
     border-radius: 10px;
@@ -13,9 +13,9 @@
 .search-input {
     height: 10vh;
     margin-top: 2vh;
-    width: 26vw;
+    width: 80vw;
     background-color: #DBAFA0;
-    font-size: 6vh;
+    font-size: 5vh;
     color: black;
     border-radius: 10px;
     border: solid black 2px;
@@ -32,41 +32,23 @@
 .search-box .search-icon {
     position: absolute;
     padding-top: 2vh;
-    min-width: 40px;
 }
 
-@media (max-width: 1300px) {
-    .search-icon {
-        width: 4.75vw;
-        padding-left: .5vw;
-    }
-
-    .search-input {
-        padding-left: 5.25vw;
-    }
-
-    .search-type-buttons {
-        height: 7vh;
-        width: 8vw;
-        font-size: 150%;
-    }
+.search-icon {
+    margin-top: 1vh;
+    width: 15vw;
+    padding-left: .5vw;
 }
 
-@media (min-width: 1400px) {
-    .search-icon {
-        width: 5vw;
-        padding-left: .5vw;
-    }
+.search-input {
+    padding-left: 15vw;
+    width: 70vw;
+}
 
-    .search-input {
-        padding-left: 6vw;
-    }
-
-    .search-type-buttons {
-        height: 6vh;
-        width: 10vw;
-        font-size: 200%;
-    }
+.search-type-buttons {
+    height: 7vh;
+    width: 30vw;
+    font-size: 150%;
 }
 
 .search-type {
@@ -120,7 +102,7 @@
 }
 
 .result-text {
-    font-size: 200%;
+    font-size: 150%;
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 1vw;
