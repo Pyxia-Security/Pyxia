@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#Programmed and Developed by @OfficialJavaScript of Pyxia Security.
 from flask import Flask, render_template, redirect, request, session, abort
 import os, flask_login, shutil, json
 from flask_login import current_user
@@ -6,7 +7,7 @@ from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
 from pathlib import Path
-from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one, load_posts, read_posts
+from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one, load_posts, read_posts, read_likes, read_comments, add_like, check_viewable, remove_like, bookmark_post, unbookmark_post
 from user_agents import parse
 
 app = Flask(__name__)
@@ -62,9 +63,108 @@ def home():
     }
     for post in posts_list:
         info = read_posts(post)
+        likes = read_likes(info["post_id"])
+        info["likes"] = likes
         post_info["posts"].append(info)
     return render_template("index.html", posts=post_info)
         
+@app.route('/pyxia/posts/<id>', methods=['GET'])
+def posts_page(id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        post_id = int(id)
+    except ValueError:
+        return abort(404)
+    response = check_viewable(post_id, current_user.id)
+    if response == "error":
+        return abort(404)
+    elif response == "not_readable":
+        return abort(403)
+    elif response == "readable":
+        data = read_posts(post_id)
+        if data == "error":
+            return abort(404)
+        likes = read_likes(id)
+        data["likes"] = likes
+        comments = read_comments(post_id)
+        return render_template("posts.html", post=data, comments=comments["comments"])
+    else:
+        return abort(403)
+     
+@app.route('/pyxia/like_post/<id>', methods=['POST'])
+def like_post(id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        post_to_be_liked = int(id)
+    except ValueError:
+        return "", 403
+    print(id)
+    response = check_viewable(post_to_be_liked, current_user.id)
+    if response == "error":
+        return "", 403
+    elif response == "not_readable":
+        return "", 403
+    add_like(post_to_be_liked, current_user.id)
+    print(read_likes(post_to_be_liked))
+    return "", 201
+
+@app.route('/pyxia/unlike_post/<id>', methods=['POST'])
+def unlike_post(id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        post_to_be_unliked = int(id)
+    except ValueError:
+        return "", 403
+    response = check_viewable(post_to_be_unliked, current_user.id)
+    if response == "error":
+        return "", 403
+    elif response == "not_readable":
+        return "", 403
+    remove_response = remove_like(post_to_be_unliked, current_user.id)
+    if remove_response == "not_liked":
+        return "", 403
+    return "", 201
+        
+@app.route('/pyxia/save_post/<id>', methods=['POST'])
+def save_post(id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        post_to_be_saved = int(id)
+    except ValueError:
+        return "", 403
+    response = check_viewable(post_to_be_saved, current_user.id)
+    if response == "error":
+        return "", 403
+    elif response == "not_readable":
+        return "", 403
+    bookmark_response = bookmark_post(post_to_be_saved, current_user.id)
+    if bookmark_response == "already_saved":
+        return  "", 201
+    return "", 201
+   
+@app.route('/pyxia/unsave_post/<id>', methods=['POST'])
+def unsave_post(id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        post_to_be_saved = int(id)
+    except ValueError:
+        return "", 403
+    print(id)
+    response = check_viewable(post_to_be_saved, current_user.id)
+    if response == "error":
+        return "", 403
+    elif response == "not_readable":
+        return "", 403
+    bookmark_response = unbookmark_post(post_to_be_saved, current_user.id)
+    if bookmark_response == "not_saved":
+        return  "", 201
+    return "", 201
+   
 def get_user_agent():
     if "user_agent" in session:
         if session["user_agent"] != "":
@@ -117,7 +217,7 @@ def login():
                     flask_login.login_user(user)
                     session['error'] = "False"
                     session['robot'] = False
-                    check_if_exists(current_user.id)
+                    check_if_exists(current_user.id, username)
                     return redirect('/')
                 else:
                     session['error'] = True
@@ -203,7 +303,7 @@ def file_upload():
     change_post_total_by_one()
     if str(files) == str("[<FileStorage: '' ('application/octet-stream')>]") or files == "":
         images = 0
-        temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, 0, request.form.get("private"), None, images, request.form.get('age_rating'))
+        temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, request.form.get("private"), None, images, request.form.get('age_rating'))
     else:
         images = len(files)
         file_list = []
@@ -222,29 +322,23 @@ def file_upload():
                 post_path = Path(f"posts/{post_id}")
                 shutil.rmtree(post_path)
                 change_post_total_by_minus_one()
-                print("Post_error")
                 return('error')
-            print("File type: ",file_type)
             time_through += 1
             file_list.append(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
             mime = file_mime_type(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
-            print("mime")
             if mime not in mimes:
-                print("not in mimes")
                 post_path = Path(f"posts/{post_id}")
                 shutil.rmtree(post_path)
                 change_post_total_by_minus_one()
                 return('error')
             scan_result = scan_upload(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
             if scan_result == "malware":
-                print("malware")
                 post_path = Path(f"posts/{post_id}")
-                print(post_path)
                 shutil.rmtree(post_path)
                 change_post_total_by_minus_one()
                 return('error')
-        temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, 0, request.form.get("private"), file_list, images, request.form.get('age_rating'))
+        temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, request.form.get("private"), file_list, images, request.form.get('age_rating'))
     response = create_post(temp_list)
     if response == "completed":
         return redirect('/pyxia')
@@ -257,19 +351,26 @@ def test_file_upload():
         return redirect('/')
     return render_template("test_upload.html")
     
-def check_if_exists(id):
+def check_if_exists(id, username):
     file = Path(f"users/{id}.json")
     if file.is_file():
         pass
     else:
-        create_user_file(id)
+        create_user_file(id, username)
 
-def create_user_file(id):
+def create_user_file(id, username):
     friends = {
-    "friends": [
-        f"{id}"
-    ]
-}
+        "friends": [
+            f"{id}"
+        ],
+        "saved_posts": [
+            
+        ],
+        "description": f"Hello World! Welcome to {username}'s Pyxia page!",
+        "settings": [
+            
+        ]
+    }
     with open(f'users/{id}.json', 'w') as outfile:
         json.dump(friends, outfile, sort_keys=True, indent=4)
 
@@ -312,5 +413,5 @@ def teapoteasteregg():
 
 if __name__ == "__main__":
     context = ('server.crt', 'server.key')
-    # deepcode ignore RunWithDebugTrue: disable debug in final project, as is for testing/debugging purposes.
+    # deepcode ignore RunWithDebugTrue: disable debug in final version, as is currently used for testing/debugging purposes.
     app.run(host='0.0.0.0', port=80, debug=True, ssl_context=context)

@@ -1,3 +1,12 @@
 {
-    "friends": ["2", "9"]
+    "description": "Hello World! Welcome to Seb's Pyxia page!",
+    "friends": [
+        "2",
+        "9",
+        "1"
+    ],
+    "saved_posts": [
+        4
+    ],
+    "settings": []
 }

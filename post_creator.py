@@ -17,8 +17,6 @@ def change_post_total_by_one():
 def change_post_total_by_minus_one():
     with open('posts/total_post.txt', 'r') as post:
         total = int(post.read())
-        print(total)
-        print(type(total))
         
     with open('posts/total_post.txt', 'w') as post:
         total -= 1
@@ -44,14 +42,14 @@ def scan_upload(file_path):
     else:
         return "clean"
     
-def create_list(id, title, desc, user, userid, likes, privacy, images, total_images, age_rating):
+def create_list(id, title, desc, user, userid, privacy, images, total_images, age_rating):
     created_list = {
         "post_id": id,
         "title": title,
         "description": desc,
+        "likes": None,
         "user": user,
         "user_id": userid,
-        "likes": likes,
         "privacy": privacy,
         "images": images,
         "total_images": total_images,
@@ -70,7 +68,7 @@ def create_post_folder(post_id):
     except FileExistsError:
         return "alreadyexists"
 
-def addposttl(post_id, privacy):
+def addposttl(post_id, privacy, user_id):
     with open("posts/total_post.json", 'r+') as post:
         data = json.load(post)
         try: 
@@ -81,7 +79,7 @@ def addposttl(post_id, privacy):
         except IndexError:
             pass
         if privacy == "on":
-            data["private_posts"]["post"].append(post_id)
+            data["private_posts"]["post"].append([post_id, str(user_id)])
             post.seek(0)
             json.dump(data, post, sort_keys=True, indent=4)
             post.truncate()
@@ -94,9 +92,114 @@ def addposttl(post_id, privacy):
 def create_post(post_info):
     with open(f'posts/{post_info["post_id"]}/post.json', 'w') as outfile:
         json.dump(post_info, outfile, sort_keys=True, indent=4)
-    addposttl(post_info["post_id"], post_info["privacy"])
+    addposttl(post_info["post_id"], post_info["privacy"], post_info["user_id"])
+    create_post_extras(post_info["post_id"])
     return "completed"
 
+def create_post_extras(post_id):
+    comments = {
+        "comments": [
+            
+        ]
+    }
+    with open(f'posts/{post_id}/comments.json', "w") as comment_file:
+        json.dump(comments, comment_file, sort_keys=True, indent=4)
+    likes = {
+        "likes_total": 0,
+        "likers": [
+            
+        ]
+    }   
+    with open(f'posts/{post_id}/likes.json', 'w') as likes_file:
+        json.dump(likes, likes_file, sort_keys=True, indent=4)
+        
+def read_comments(post_id):
+    with open(f'posts/{post_id}/comments.json', 'r') as comment_file:
+        comments = json.load(comment_file)
+        return comments
+
+def read_likes(post_id):
+    with open(f'posts/{post_id}/likes.json', 'r') as likes_file:
+        likes = json.load(likes_file)
+        return likes["likes_total"]
+    
+def add_like(post_id, user_id):
+    with open(f'posts/{post_id}/likes.json', 'r+') as likes_file:
+        likes_data = json.load(likes_file)
+        if user_id in likes_data["likers"]:
+            return "already_liked"
+        else:
+            likes_data["likes_total"] = int(likes_data["likes_total"]) + 1
+            likes_data["likers"].append(user_id)
+            likes_file.seek(0)
+            json.dump(likes_data, likes_file, sort_keys=True, indent=4)
+            likes_file.truncate()
+    
+def remove_like(post_id, user_id):
+    with open(f'posts/{post_id}/likes.json', 'r+') as likes_file:
+        likes_data = json.load(likes_file)
+        if user_id not in likes_data["likers"]:
+            return "not_liked"
+        else:
+            likes_data["likes_total"] = int(likes_data["likes_total"]) - 1
+            likes_data["likers"].remove(user_id)
+            likes_file.seek(0)
+            json.dump(likes_data, likes_file, sort_keys=True, indent=4)
+            likes_file.truncate()
+            return "done"
+    
+def bookmark_post(post_id, user_id):
+    with open(f'users/{user_id}.json', 'r+') as user_file:
+        data = json.load(user_file)
+        if post_id in data["saved_posts"]:
+            return "already_saved"
+        else:
+            data["saved_posts"].append(post_id)
+            user_file.seek(0)
+            json.dump(data, user_file, sort_keys=True, indent=4)
+            user_file.truncate()
+    
+def unbookmark_post(post_id, user_id):
+    with open(f'users/{user_id}.json', 'r+') as user_file:
+        data = json.load(user_file)
+        if post_id not in data["saved_posts"]:
+            return "not_saved"
+        else:
+            data["saved_posts"].remove(post_id)
+            user_file.seek(0)
+            json.dump(data, user_file, sort_keys=True, indent=4)
+            user_file.truncate()
+    
+def check_viewable(post_id, user_id):
+    try:
+        with open(f"posts/{post_id}/post.json", 'r') as post_file:
+            file = json.load(post_file)
+            if file["privacy"] == "on":
+                poster_id = str(file["user_id"])
+            else:
+                return "readable"
+    except FileNotFoundError:
+        return "error"
+    with open(f"users/{user_id}.json", 'r') as user_info:
+        data = json.load(user_info)
+        if poster_id in data["friends"]:
+            return "readable"
+        else:
+            return "not_readable"
+            
+def add_comment(post_id, user_id, user_username, content):
+    with open(f'posts/{post_id}/comments.json', 'r+') as comments_file:
+        comment_data = json.load(comments_file)
+        comment_add_data = {
+            "content": content,
+            "user": user_username,
+            "user_id": user_id
+        }
+        comment_data["comments"].append(comment_add_data)
+        comments_file.seek(0)
+        json.dump(comment_data, comments_file, sort_keys=True, indent=4)
+        comments_file.truncate()
+    
 def load_posts(home_screen_posts, friends_ids):
     with open("posts/total_post.json", 'r') as post:
         data = json.load(post)
@@ -133,7 +236,9 @@ def load_posts(home_screen_posts, friends_ids):
     return posts_to_be_used
 
 def read_posts(post_id):
-    print(post_id)
-    with open(f"posts/{post_id}/post.json", 'r') as post_json:
-        data = json.load(post_json)
-        return data
+    try:
+        with open(f"posts/{post_id}/post.json", 'r') as post_json:
+            data = json.load(post_json)
+            return data
+    except FileNotFoundError:
+        return "error"

@@ -63,3 +63,12 @@ function clips() {
     location.href = "clips"
 }
 
+function like_post(post_id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        print(this.status);
+    };
+    var post_id_request = "/pyxia/like_post/" + post_id;
+    xhttp.open("POST", post_id_request, True)
+    xhttp.send();
+}

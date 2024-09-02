@@ -1,0 +1,12 @@
+{
+    "age_rating": "16",
+    "description": "This is a private post to test functionality and make sure that the site is secure!",
+    "images": null,
+    "likes": null,
+    "post_id": "4",
+    "privacy": "on",
+    "title": "Private Post!",
+    "total_images": 0,
+    "user": "Seb",
+    "user_id": 2
+}
