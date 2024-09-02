@@ -3,7 +3,12 @@
     <head>
         <title>Pyxia</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/pyxia.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+        {% if current_user.is_authenticated == True %}
+            <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        {% else %}
+            <script src="{{ url_for('static', filename='scripts/unauthed.js') }}"></script>
+        {% endif %}
     </head>
     <body>
         <h1 class="name">Pyxia</h1>
