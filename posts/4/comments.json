@@ -1,3 +1,14 @@
 {
-    "comments": []
+    "comments": [
+        {
+            "content": "Hi!",
+            "user": "Seb",
+            "user_id": 2
+        },
+        {
+            "content": "Hello Again!",
+            "user": "Seb",
+            "user_id": 2
+        }
+    ]
 }

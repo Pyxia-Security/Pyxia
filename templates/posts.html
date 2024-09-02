@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/post.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/post.css') }}">
     </head>
@@ -28,11 +29,19 @@
         <div id="post-comment-overlay">
             <div class="post-comment-wrapper">
                 <div class="post-comment-top">
-                    <h2 class="post-comment-top-text">Comment</h2>
+                    <h2 class="post-comment-top-text">Add Comment</h2>
+                    <button id="close-post-comment" onclick="close_add_comment()">
+                        <img class="close-post-comment-image" src="{{ url_for('static', filename='images/exit.png') }}" height="100%">
+                    </button>
                 </div>
                 <div class="post-comment-mid">
-                    <form method="post">
-                        
+                    <form action="/pyxia/add_comment/{{ post['post_id'] }}" method="post">
+                        <div class="comment-input-container">
+                            <textarea class="comment-input" maxlength="300" name="comment" required></textarea>
+                        </div>
+                        <div class="comment-submit-container">
+                            <input type="submit" class="comment-submit">
+                        </div>
                     </form>
                 </div>
             </div>
@@ -81,8 +90,11 @@
                                     <button class="post-interact-button post-bookmark-button"><img height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
                                     <button class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
                                 </div>
-                                <div class="comment-button">
-                                    <button class="post-comment-button"><h2>Comments</h2></button>
+                                <div class="comment-top">
+                                    <h2 class="post-comment-text">Comments:</h2>
+                                    <button class="post-comment-add-button" onclick="open_add_comment()">
+                                        <h2>Add Comment</h2>
+                                    </button>
                                 </div>
                                 <div class="comments">
                                     {% for comment in comments %}

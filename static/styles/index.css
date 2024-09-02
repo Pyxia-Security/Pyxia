@@ -259,13 +259,6 @@ body {
     margin-right: 1vw;
 }
 
-.post-comment-button {
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
-    margin-left: 1vh;
-    margin-bottom: 1vh;
-}
-
 .text-center {
     text-align: center;
     margin-left: auto;

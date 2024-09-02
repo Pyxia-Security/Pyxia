@@ -7,7 +7,7 @@ from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
 from pathlib import Path
-from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one, load_posts, read_posts, read_likes, read_comments, add_like, check_viewable, remove_like, bookmark_post, unbookmark_post
+from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one, load_posts, read_posts, read_likes, read_comments, add_like, check_viewable, remove_like, bookmark_post, unbookmark_post, add_comment
 from user_agents import parse
 
 app = Flask(__name__)
@@ -100,14 +100,12 @@ def like_post(id):
         post_to_be_liked = int(id)
     except ValueError:
         return "", 403
-    print(id)
     response = check_viewable(post_to_be_liked, current_user.id)
     if response == "error":
         return "", 403
     elif response == "not_readable":
         return "", 403
     add_like(post_to_be_liked, current_user.id)
-    print(read_likes(post_to_be_liked))
     return "", 201
 
 @app.route('/pyxia/unlike_post/<id>', methods=['POST'])
@@ -143,7 +141,7 @@ def save_post(id):
         return "", 403
     bookmark_response = bookmark_post(post_to_be_saved, current_user.id)
     if bookmark_response == "already_saved":
-        return  "", 201
+        return  "", 403
     return "", 201
    
 @app.route('/pyxia/unsave_post/<id>', methods=['POST'])
@@ -154,7 +152,6 @@ def unsave_post(id):
         post_to_be_saved = int(id)
     except ValueError:
         return "", 403
-    print(id)
     response = check_viewable(post_to_be_saved, current_user.id)
     if response == "error":
         return "", 403
@@ -162,8 +159,27 @@ def unsave_post(id):
         return "", 403
     bookmark_response = unbookmark_post(post_to_be_saved, current_user.id)
     if bookmark_response == "not_saved":
-        return  "", 201
-    return "", 201
+        return  "", 403
+    return "", 200
+   
+@app.route('/pyxia/add_comment/<id>', methods=['POST'])
+def add_comment_page(id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        post_id = int(id)
+    except ValueError:
+        return abort(404)
+    response = check_viewable(post_id, current_user.id)
+    if response == "error":
+        return abort(403)
+    elif response == "not_readable":
+        return abort(403)
+    comment = request.form.get('comment')
+    if len(comment) > 301:
+        return abort(405, "Content larger than 300")
+    add_comment(post_id, current_user.id, current_user.username, request.form.get('comment'))
+    return redirect(f'/pyxia/posts/{post_id}')
    
 def get_user_agent():
     if "user_agent" in session:
