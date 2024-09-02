@@ -1,0 +1,60 @@
+.notification-container {
+    height: 100vh;
+    width: 100%;
+    background-color: #704264;
+}
+
+.notification-topbar {
+    padding: 0;
+    height: 7vh;
+    display: flex;
+}
+
+.notification-title {
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 5vh;
+}
+
+.notification-inner {
+    height: 75.2vh;
+}
+
+.notification-inner-container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2svh;
+    width: 72vw;
+    height: auto;
+}
+
+.notification-box {
+    background-color: #DBAFA0;
+    display: flex;
+    width: 100%;
+    height: 10vh;
+    border: solid black 2px;
+    border-radius: 10px;
+    margin-bottom: 1vh;
+}
+
+.notification-name {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1vw;
+}
+
+.notification-name {
+    font-size: 5vh;
+}
+
+.notification-button {
+    margin-left: auto;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+}
+
+.annoyingimage {
+    position: absolute;
+    margin-left: 93vw;
+}
