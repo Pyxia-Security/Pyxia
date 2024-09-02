@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, redirect, request, session, abort
-import os, flask_login
+import os, flask_login, shutil
 from flask_login import current_user
 from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
+from pathlib import Path
+from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one
 from user_agents import parse
 
 app = Flask(__name__)
@@ -13,10 +15,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{config("NAME")}:{config(
 app.config["RECAPTCHA_SECRET_KEY"] = config("RECAPTCHA_SECRET_KEY")
 app.config["RECAPTCHA_SITE_KEY"] = config("RECAPTCHA_SITE_KEY")
 app.config["RECAPTCHA_ENABLED"] = config("RECAPTCHA_ENABLED")
+app.config['UPLOAD_FOLDER'] = "C:\\Digi Project - Social Media\\Pyxia\\posts\\"
 recaptcha = ReCaptcha(app=app)
 db.init_app(app)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
+total_post = total_posts()
 
 class User(db.Model, flask_login.UserMixin):
     __tablename__ = "userdb"
@@ -36,16 +40,20 @@ def index():
     session['already_exists'] = False
     session['robot'] = False
     get_user_agent()
-    return render_template("index.html", yes=session["device_type"])
+    return render_template("main.html", yes=session["device_type"])
 
-@app.route("/main", methods=['GET'])
+@app.route("/notifications", methods=['GET'])
+def notifications_page():
+    return render_template("notifications.html")
+
+@app.route("/pyxia", methods=['GET'])
 def scroll():
     session['error'] = False
     session['already_exists'] = False
     session['robot'] = False
     if current_user.is_authenticated == False:
             return redirect('/')
-    return render_template("main.html")
+    return render_template("index.html")
 
 #def check_sessionvar_exist(variable):
  #   if variable in session:
@@ -180,6 +188,68 @@ def signup():
             session['robot'] = True
             redirect('/signup')
 
+@app.route('/pyxia/upload', methods=['POST'])
+def file_upload():
+    files = request.files.getlist("file")
+    post_id = total_posts()
+    create_post_folder(post_id)
+    change_post_total_by_one()
+    if str(files) == str("[<FileStorage: '' ('application/octet-stream')>]") or files == "":
+        images = 0
+        print("no images")
+    else:
+        images = len(files)
+        file_list = []
+        mimes = ['image/jpeg', 'image/jpg', 'image/png', 'video/mp4']
+        time_through = 0
+        for file in files:
+            if file.filename.lower().endswith('.png'):
+                file_type = ".png"
+            elif file.filename.lower().endswith(('.jpg')):
+                file_type = ".jpg"
+            elif file.filename.lower().endswith(('.jpeg')):
+                file_type = ".jpeg"
+            elif file.filename.lower().endswith(('.mp4')):
+                file_type = ".mp4"
+            else:
+                post_path = Path(f"posts/{post_id}")
+                shutil.rmtree(post_path)
+                change_post_total_by_minus_one()
+                print("Post_error")
+                return('error')
+            print("File type: ",file_type)
+            time_through += 1
+            file_list.append(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
+            mime = file_mime_type(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
+            print("mime")
+            if mime not in mimes:
+                print("not in mimes")
+                post_path = Path(f"posts/{post_id}")
+                shutil.rmtree(post_path)
+                change_post_total_by_minus_one()
+                return('error')
+            scan_result = scan_upload(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
+            if scan_result == "malware":
+                print("malware")
+                post_path = Path(f"posts/{post_id}")
+                print(post_path)
+                shutil.rmtree(post_path)
+                change_post_total_by_minus_one()
+                return('error')
+    temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, 0, request.form.get("private"), file_list, images, request.form.get('age_rating'))
+    response = create_post(temp_list)
+    if response == "completed":
+        return redirect('/pyxia')
+    else:
+        return('error')
+    
+@app.route('/pyxia/upload_test', methods=['GET'])
+def test_file_upload():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    return render_template("test_upload.html")
+    
 @login_manager.unauthorized_handler
 def login_unauthorized_handler():
     return render_template("error/401.html"), 401
@@ -204,9 +274,9 @@ def gone_handler(e):
 def intserverror_handler(e):
     return render_template("error/500.html"), 500
 
-@app.errorhandler(Exception)
-def unauthorized_handler(e):
-    return render_template("error/418.html", error=e), 418
+#@app.errorhandler(Exception)
+#def unauthorized_handler(e):
+ #   return render_template("error/418.html", error=e), 418
 
 @app.route("/teapot")
 def teapoteasteregg():
