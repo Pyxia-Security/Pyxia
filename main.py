@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, redirect, request, session, abort
-import os, flask_login, shutil
+import os, flask_login, shutil, json
 from flask_login import current_user
 from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
 from pathlib import Path
-from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one
+from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one, load_posts, read_posts
 from user_agents import parse
 
 app = Flask(__name__)
@@ -20,7 +20,7 @@ recaptcha = ReCaptcha(app=app)
 db.init_app(app)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-total_post = total_posts()
+home_screen_posts = 10
 
 class User(db.Model, flask_login.UserMixin):
     __tablename__ = "userdb"
@@ -40,6 +40,7 @@ def index():
     session['already_exists'] = False
     session['robot'] = False
     get_user_agent()
+    #Note to self: Personal user id is added to the friends list so they can see their own posts, so remove when checking for friends in list (do something like friends[1] onwards, skipping friends[0] which = user_id).
     return render_template("main.html", yes=session["device_type"])
 
 @app.route("/notifications", methods=['GET'])
@@ -47,18 +48,22 @@ def notifications_page():
     return render_template("notifications.html")
 
 @app.route("/pyxia", methods=['GET'])
-def scroll():
+def home():
     session['error'] = False
     session['already_exists'] = False
     session['robot'] = False
     if current_user.is_authenticated == False:
             return redirect('/')
-    return render_template("index.html")
-
-#def check_sessionvar_exist(variable):
- #   if variable in session:
-   #     if session[f"{variable}"] != "":
-  #          return True
+    posts_list = load_posts(home_screen_posts, read_friends(current_user.id))
+    post_info = {
+        "posts": [
+            
+        ]
+    }
+    for post in posts_list:
+        info = read_posts(post)
+        post_info["posts"].append(info)
+    return render_template("index.html", posts=post_info)
         
 def get_user_agent():
     if "user_agent" in session:
@@ -73,7 +78,7 @@ def tester_site():
     return render_template("tester2.html")
 
 @app.route("/a")
-def home():
+def anonymous():
     if current_user.is_authenticated == True:
         return redirect('/')
     return render_template("anonymous.html")
@@ -112,6 +117,7 @@ def login():
                     flask_login.login_user(user)
                     session['error'] = "False"
                     session['robot'] = False
+                    check_if_exists(current_user.id)
                     return redirect('/')
                 else:
                     session['error'] = True
@@ -183,12 +189,13 @@ def signup():
                 )
                 db.session.add(user)
                 db.session.commit()
+                
                 return redirect('/login-ert')
         else:
             session['robot'] = True
             redirect('/signup')
 
-@app.route('/pyxia/upload', methods=['POST'])
+@app.route('/pyxia/create_post', methods=['POST'])
 def file_upload():
     files = request.files.getlist("file")
     post_id = total_posts()
@@ -196,7 +203,7 @@ def file_upload():
     change_post_total_by_one()
     if str(files) == str("[<FileStorage: '' ('application/octet-stream')>]") or files == "":
         images = 0
-        print("no images")
+        temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, 0, request.form.get("private"), None, images, request.form.get('age_rating'))
     else:
         images = len(files)
         file_list = []
@@ -237,7 +244,7 @@ def file_upload():
                 shutil.rmtree(post_path)
                 change_post_total_by_minus_one()
                 return('error')
-    temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, 0, request.form.get("private"), file_list, images, request.form.get('age_rating'))
+        temp_list = create_list(post_id, request.form.get("title"), request.form.get("description"), current_user.username, current_user.id, 0, request.form.get("private"), file_list, images, request.form.get('age_rating'))
     response = create_post(temp_list)
     if response == "completed":
         return redirect('/pyxia')
@@ -250,6 +257,27 @@ def test_file_upload():
         return redirect('/')
     return render_template("test_upload.html")
     
+def check_if_exists(id):
+    file = Path(f"users/{id}.json")
+    if file.is_file():
+        pass
+    else:
+        create_user_file(id)
+
+def create_user_file(id):
+    friends = {
+    "friends": [
+        f"{id}"
+    ]
+}
+    with open(f'users/{id}.json', 'w') as outfile:
+        json.dump(friends, outfile, sort_keys=True, indent=4)
+
+def read_friends(id):
+    with open(f'users/{id}.json', 'r') as data:
+        user_data = json.load(data)
+        return user_data["friends"]
+
 @login_manager.unauthorized_handler
 def login_unauthorized_handler():
     return render_template("error/401.html"), 401
@@ -276,7 +304,7 @@ def intserverror_handler(e):
 
 #@app.errorhandler(Exception)
 #def unauthorized_handler(e):
- #   return render_template("error/418.html", error=e), 418
+    #return render_template("error/418.html", error=e), 418
 
 @app.route("/teapot")
 def teapoteasteregg():

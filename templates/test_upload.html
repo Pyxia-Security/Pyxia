@@ -3,7 +3,7 @@
     <title>File Upload</title>   
 </head>   
 <body>   
-    <form action="/pyxia/upload" method="post" enctype="multipart/form-data" id="form">
+    <form action="/pyxia/create_post" method="post" enctype="multipart/form-data" id="form">
         <input type="text" placeholder="Title" name="title" required/>
         <br>
         <input type="text" placeholder="Description" name="description" required/>
@@ -18,7 +18,7 @@
         <p>Private?</p>
         <input type="checkbox" name="private" />
         <br>
-        <input type="file" name="file" accept=".png, .jpg, .mp4, .jpeg" multiple required/>  
+        <input type="file" name="file" accept=".png, .jpg, .mp4, .jpeg" multiple/>  
         <br> 
         <input type="submit" value="Post">   
     </form>   

@@ -8,5 +8,8 @@
     </head>
     <body>
         <h1 class="name">Pyxia - Anonymous</h1>
+        {% for post in posts["posts"] %}
+            <h1>{{ post["title"] }}</h1>
+        {% endfor %}
     </body>
 </html>

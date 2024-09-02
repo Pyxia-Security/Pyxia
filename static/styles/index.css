@@ -245,6 +245,12 @@ body {
     border: none;
 }
 
+.post-interact-likes {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: .25vw;
+}
+
 .post-bookmark-button {
     margin-left: auto;
 }
