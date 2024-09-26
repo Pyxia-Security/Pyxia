@@ -1,0 +1,16 @@
+{
+    "age": "16",
+    "chat_rooms": [],
+    "custom_pfp": false,
+    "pfp_type": false,
+    "user_id": "12",
+    "description": "Hello World! Welcome to Emi's Pyxia page!",
+    "friends": [
+        "12"
+    ],
+    "saved_posts": [
+        1
+    ],
+    "settings": [],
+    "username": "Emi"
+}

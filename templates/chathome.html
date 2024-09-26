@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en-nz" id="html">
+<html lang="en-nz">
     <head>
-        <title>{{ user["username"] }} | Pyxia</title>
+        <title>Chats | Pyxia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/myprofile.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/chats.css') }}">
     </head>
     <body>
         <header>
@@ -43,24 +42,15 @@
                     </button>
                 </div>
             </div>
-            <div class="profile-container">
-                <div class="profile-wrapper">
-                    <div class="profile-top">
-                        <div class="profile-top-wrapper">
-                            {% if user["custom_pfp"] == True %}
-                                <img class="container-profile-picture" src="{{ pfp }}">
-                            {% else %}
-                                <img class="container-profile-picture" src="{{ url_for('static', filename='images/profile.png') }}">
-                            {% endif %}
-                            <h2 class="container-profile-username">{{ user["username"] }}</h2>
-                        </div>
-                    </div>
-                    <div class="profile-edit-description">
-                        <button onclick="message({{  user['user_id'])  }}" class="edit-button">Message</button>
-                    </div>
-                    <div class="profile-inner">
-                        <p class="profile-description">{{ user["description"] }}</p>
-                    </div>
+            <div class="chats_container">
+                <div class="chats_wrapper">
+                    <h1 class="center">Chat</h1>
+                    <h2 class="chat_title">Chats:</h2>
+                    <ul>
+                        {% for chat in chats %}
+                            <li><a href="/pyxia/chat/{{ chat[0] }}"><h2>{{ chat[1] }}</h2></a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

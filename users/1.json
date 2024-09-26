@@ -1,12 +1,23 @@
 {
+    "age": "18",
+    "chat_rooms": [
+        [
+            "5555905904050573159",
+            "Test Chat"
+        ]
+    ],
+    "custom_pfp": false,
     "description": "Hello World! Welcome to John's Pyxia page!",
     "friends": [
         "1",
-        "5",
-        "2"
+        "5"
     ],
+    "pfp_type": false,
     "saved_posts": [
-        4
+        4,
+        2
     ],
-    "settings": []
+    "settings": [],
+    "user_id": "1",
+    "username": "John"
 }

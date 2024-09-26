@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat return</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/chatroomext.css') }}">
+    </head>
+    <body id="site">
+        <div class="chat_inner_container">
+            {% for message in messages %}
+            <div class="message_container">
+                <div class="message_wrapper">
+                    <h3 class="message">{{ message[1] }}: {{ message[2] }}</h3>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

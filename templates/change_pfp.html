@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-nz" id="html">
     <head>
-        <title>{{ user["username"] }} | Pyxia</title>
+        <title>{{ current_user.username }} | Pyxia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
@@ -43,23 +43,14 @@
                     </button>
                 </div>
             </div>
-            <div class="profile-container">
-                <div class="profile-wrapper">
-                    <div class="profile-top">
-                        <div class="profile-top-wrapper">
-                            {% if user["custom_pfp"] == True %}
-                                <img class="container-profile-picture" src="{{ pfp }}">
-                            {% else %}
-                                <img class="container-profile-picture" src="{{ url_for('static', filename='images/profile.png') }}">
-                            {% endif %}
-                            <h2 class="container-profile-username">{{ user["username"] }}</h2>
-                        </div>
-                    </div>
-                    <div class="profile-edit-description">
-                        <button onclick="message({{  user['user_id'])  }}" class="edit-button">Message</button>
-                    </div>
-                    <div class="profile-inner">
-                        <p class="profile-description">{{ user["description"] }}</p>
+            <div class="pfp_upload_container">
+                <div class="pfp_upload_wrapper">
+                    <h2 class="pfp_upload_text">Upload a new Profile Picture</h2>
+                    <div class="upload_input_wrapper">
+                        <form method="post" action="/pyxia/profile/change_pfp_post" class="pfp_upload_input" enctype="multipart/form-data">
+                            <input type=file name=file accept=".png, .jpg, .jpeg" required/>  
+                            <input type="submit">
+                        </form>
                     </div>
                 </div>
             </div>

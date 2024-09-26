@@ -1,8 +1,10 @@
 {
     "age_rating": "16",
-    "description": "What rocks won't eat",
+    "description": "What Flynn won't eat",
     "images": null,
     "likes": null,
+    "liked": null,
+    "bookmarked": null,
     "post_id": "3",
     "privacy": null,
     "title": "Food",

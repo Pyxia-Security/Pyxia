@@ -26,6 +26,22 @@
                 <iframe class="iframe-notification-overlay" src="/notifications"></iframe>
             </div>
         </div>
+        <div id="description-overlay">
+            <div class="description-wrapper">
+                <div class="description-top-container">
+                    <h2 class="description-top-title">Edit Description</h2>
+                    <button id="description-close-menu" onclick="edit_desc_close()"><img width="50vw" src="{{ url_for('static', filename='images/exit.png') }}"></button>
+                </div>
+                <form method="post" action="/pyxia/update_description">
+                    <div class="description-contents">
+                        <textarea name="description" id="description-text-area" required maxlength="300">{{ user["description"] }}</textarea>
+                    </div>
+                    <div class="description-submit-container">
+                        <button class="description-update">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="container">
             <div class="side-bar" id="sidebar-container">
                 <div class="sidebar-button-div" id="sidebar">
@@ -56,7 +72,10 @@
                         </div>
                     </div>
                     <div class="profile-edit-description">
-                        <button onclick="message({{  user['user_id'])  }}" class="edit-button">Message</button>
+                        <button onclick="edit_desc_open()" class="edit-button">Edit Description</button>
+                        <button onclick="change_pfp()" class="edit-button">Change Profile Picture</button>
+                        <button class="edit-button">Account Settings</button>
+                        <button onclick="logout()" class="edit-button">Logout</button> 
                     </div>
                     <div class="profile-inner">
                         <p class="profile-description">{{ user["description"] }}</p>

@@ -13,7 +13,7 @@
             <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px">
             <div class="header-container">
                 <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="{{ url_for('static', filename='images/exit.png') }}" id="opencloseImage" class="nav-icons"></button>
-                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
+                <button class="account-button" onclick="profile()"><p class="profile-user-name">{{ current_user.username }}</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
                 <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/notification.png') }}" class="nav-icons"></button>
                 <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons"></button> 
             </div>
@@ -22,6 +22,24 @@
             <div class="notification-overlay">
                 <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="{{ url_for('static', filename='images/exit.png') }}"></button>
                 <iframe class="iframe-notification-overlay" src="/notifications"></iframe>
+            </div>
+        </div>
+        <div id="share_overlay">
+            <div class="share_wrapper">
+                <div class="share_top">
+                    <h2 class="share_top_text">Share</h2>
+                    <button id="share_top_post" onclick="close_share()">
+                        <img class="close-post-comment-image" src="{{ url_for('static', filename='images/exit.png') }}" height="100%">
+                    </button>
+                </div>
+                <div class="share_text_main">
+                    <div class="share_input_box_container">
+                        <input id="share_link_box" type="text" value="https://pyxia.tech/pyxia" readonly>
+                    </div>
+                    <div class="share_copy_link_container">
+                        <button onclick="copy_link()" class="share_copy_link">Copy Link</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="container">
@@ -64,10 +82,18 @@
                                         </div>
                                     </div>
                                     <div class="post-interaction">
-                                        <button class="post-interact-button"><img height="50vh" src="{{ url_for('static', filename='images/like.png') }}"></button>
-                                        <h2 class="post-interact-likes">{{ post["likes"] }}</h2>
-                                        <button class="post-interact-button post-bookmark-button"><img height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
-                                        <button class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
+                                        {% if post["liked"] == "liked" %}
+                                            <button id="like_button_{{post['post_id']}}" onclick="unlike_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/liked.png') }}"></button>
+                                        {% else %}
+                                            <button id="like_button_{{post['post_id']}}" onclick="like_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/like.png') }}"></button>
+                                        {% endif %}
+                                        <h2 id="post_likes_{{post['post_id']}}" class="post-interact-likes">{{ post["likes"] }}</h2>
+                                        {% if post["bookmarked"] == "bookmarked" %}
+                                            <button id="bookmark_button_{{post['post_id']}}" onclick="unsave_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmarked.png') }}"></button>
+                                        {% else %}
+                                            <button id="bookmark_button_{{post['post_id']}}" onclick="save_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
+                                        {% endif %}
+                                        <button onclick="open_share({{post['post_id']}})" class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
                                     </div>
                                 </div>
                             </div>

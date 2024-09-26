@@ -15,7 +15,7 @@
             <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px">
             <div class="header-container">
                 <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="{{ url_for('static', filename='images/exit.png') }}" id="opencloseImage" class="nav-icons"></button>
-                <button class="account-button" onclick="profile()"><p class="profile-user-name">NAME</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
+                <button class="account-button" onclick="profile()"><p class="profile-user-name">{{ current_user.username }}</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
                 <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/notification.png') }}" class="nav-icons"></button>
                 <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons"></button> 
             </div>

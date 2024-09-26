@@ -9,6 +9,16 @@
             "content": "This post is fire!",
             "user": "Seb",
             "user_id": 1
+        },
+        {
+            "content": "Oh okay.",
+            "user": "Seb",
+            "user_id": 2
+        },
+        {
+            "content": "Nice Post!",
+            "user": "Doggington",
+            "user_id": 8
         }
     ]
 }

@@ -48,6 +48,8 @@ def create_list(id, title, desc, user, userid, privacy, images, total_images, ag
         "title": title,
         "description": desc,
         "likes": None,
+        "liked": None,
+        "bookmarked": None,
         "user": user,
         "user_id": userid,
         "privacy": privacy,
@@ -148,6 +150,14 @@ def remove_like(post_id, user_id):
             likes_file.truncate()
             return "done"
     
+def check_if_liked(post_id, user_id):
+    with open(f'posts/{post_id}/likes.json', 'r') as likes_file:
+        likes_data = json.load(likes_file)
+        if user_id in likes_data["likers"]:
+            return "liked"
+        else:
+            return "not_liked"
+
 def bookmark_post(post_id, user_id):
     with open(f'users/{user_id}.json', 'r+') as user_file:
         data = json.load(user_file)
@@ -169,6 +179,16 @@ def unbookmark_post(post_id, user_id):
             user_file.seek(0)
             json.dump(data, user_file, sort_keys=True, indent=4)
             user_file.truncate()
+            
+def check_if_bookmarked(post_id, user_id):
+    with open(f'users/{user_id}.json', 'r') as user_file:
+        user_data = json.load(user_file)
+        print(user_data)
+        print(f"Post_id: {post_id}, user_id: {user_id}")
+        if post_id in user_data["saved_posts"]:
+            return "bookmarked"
+        else:
+            return "not_bookmarked"
     
 def check_viewable(post_id, user_id):
     try:
@@ -200,7 +220,7 @@ def add_comment(post_id, user_id, user_username, content):
         json.dump(comment_data, comments_file, sort_keys=True, indent=4)
         comments_file.truncate()
     
-def load_posts(home_screen_posts, friends_ids):
+def load_posts(home_screen_posts, friends_ids, user_id):
     with open("posts/total_post.json", 'r') as post:
         data = json.load(post)
     viewable_posts = []
@@ -235,6 +255,11 @@ def load_posts(home_screen_posts, friends_ids):
             posts_to_be_used.append(viewable_posts[numbers - 1])
     return posts_to_be_used
 
+def check_user_age(user_id):
+    with open(f"users/{user_id}.json", 'r') as user_data:
+        data = json.load(user_data)
+        return data["age"]
+    
 def read_posts(post_id):
     try:
         with open(f"posts/{post_id}/post.json", 'r') as post_json:
@@ -242,3 +267,32 @@ def read_posts(post_id):
             return data
     except FileNotFoundError:
         return "error"
+    
+def read_user(user_id):
+    with open(f'users/{user_id}.json', 'r') as user_json:
+        user_data = json.load(user_json)
+        return user_data
+    
+def change_description(user_id, description):
+    with open(f'users/{user_id}.json', 'r+') as user_json:
+        data = json.load(user_json)
+        data["description"] = description
+        user_json.seek(0)
+        json.dump(data, user_json, sort_keys=True, indent=4)
+        user_json.truncate()
+        
+def custom_pfp_data(user_id, file_type):
+    with open(f'users/{user_id}.json', 'r+') as user_json:
+        data = json.load(user_json)
+        data["custom_pfp"] = True
+        data["pfp_type"] = file_type
+        user_json.seek(0)
+        json.dump(data, user_json, sort_keys=True, indent=4)
+        user_json.truncate()
+
+def check_if_user_exists(user_id):
+    try:
+        with open(f'users/{user_id}.json', 'r') as user:
+            return "exists"
+    except FileNotFoundError:
+        return "none"

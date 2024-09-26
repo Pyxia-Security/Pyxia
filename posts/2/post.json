@@ -3,6 +3,8 @@
     "description": "This is the first post on Pyxia, it is also a test to make sure that there are no problems with anything.",
     "images": null,
     "likes": null,
+    "liked": null,
+    "bookmarked": null,
     "post_id": "2",
     "privacy": null,
     "title": "Test page",

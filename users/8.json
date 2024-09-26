@@ -1,10 +1,16 @@
 {
-    "description": "Hello World! Welcome to Doggington's Pyxia page!",
+    "age": "18",
+    "chat_rooms": [],
+    "custom_pfp": false,
+    "description": "Hello World! Welcome to Doggington's Pyxia page! Woop Woop, it works!",
     "friends": [
         "8"
     ],
+    "pfp_type": false,
     "saved_posts": [
         4
     ],
-    "settings": []
+    "settings": [],
+    "user_id": "8",
+    "username": "Doggington"
 }

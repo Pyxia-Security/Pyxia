@@ -302,3 +302,70 @@ body {
     border: none;
 }
 
+#share_overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(100, 100, 100, 0.5);
+    z-index: 2;
+}
+
+.share_wrapper {
+    width: 25vw;
+    height: 20vh;
+    margin: auto;
+    background-color: #704264;
+}
+
+.share_top {
+    height: 5vh;
+    display: flex
+}
+
+.share_top_text {
+    margin: auto;
+    font-size: 2em;
+}
+
+.share_text_main {
+    height: 15vh;
+}
+
+.share_input_box_container {
+    display: flex;
+    height: 7vh;
+}
+
+#share_link_box {
+    margin-top: 2vh;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20vw;
+    text-align: center;
+    font-size: 1.25em;
+}
+
+.share_copy_link_container {
+    height: 8vh;
+    display: flex;
+}
+
+.share_copy_link {
+    height: 6vh;
+    width: 10vw;
+    margin: auto;
+    font-size: 1.5em;
+}
+
+#share_top_post {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    position: absolute;
+    margin-left: 21.75%;
+    height: 6%;
+}

@@ -1,12 +1,22 @@
 {
-    "description": "Hello World! Welcome to Seb's Pyxia page!",
+    "age": "18",
+    "chat_rooms": [
+        [
+            "5555905904050573159",
+            "Test Chat"
+        ]
+    ],
+    "custom_pfp": true,
+    "description": "Hello World! Welcome my Pyxia page! I am the developer and CEO of Pyxia-Security.",
     "friends": [
         "2",
-        "9",
-        "1"
+        "9"
     ],
+    "pfp_type": ".jpg",
     "saved_posts": [
-        4
+        3
     ],
-    "settings": []
+    "settings": [],
+    "user_id": "2",
+    "username": "Seb"
 }

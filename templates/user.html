@@ -7,7 +7,6 @@
         <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/myprofile.css') }}">
     </head>
     <body>
         <header>
@@ -23,7 +22,7 @@
         <div id="notification-overlay">
             <div class="notification-overlay">
                 <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="{{ url_for('static', filename='images/exit.png') }}"></button>
-                <iframe class="iframe-notification-overlay" src="/notifications"></iframe>
+                <iframe class="iframe-notification-overlay" src="notifications.html"></iframe>
             </div>
         </div>
         <div class="container">
@@ -47,19 +46,15 @@
                 <div class="profile-wrapper">
                     <div class="profile-top">
                         <div class="profile-top-wrapper">
-                            {% if user["custom_pfp"] == True %}
-                                <img class="container-profile-picture" src="{{ pfp }}">
-                            {% else %}
-                                <img class="container-profile-picture" src="{{ url_for('static', filename='images/profile.png') }}">
-                            {% endif %}
-                            <h2 class="container-profile-username">{{ user["username"] }}</h2>
+                            <img class="container-profile-picture" src="{{ url_for('static', filename='images/profile.png') }}">
+                            <h2 class="container-profile-username">NAME</h2>
                         </div>
                     </div>
                     <div class="profile-edit-description">
-                        <button onclick="message({{  user['user_id'])  }}" class="edit-button">Message</button>
+                        <button class="edit-button">Message</button>
                     </div>
                     <div class="profile-inner">
-                        <p class="profile-description">{{ user["description"] }}</p>
+                        <p class="profile-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent consectetur iaculis lorem, sed auctor nisi pretium a. Aenean id tristique risus. Sed non tellus sit amet nibh accumsan dignissim rutrum ac purus. Sed feugiat elit eu orci consequat, eget consectetur justo bibendum. Aenean mattis ante tortor, vel hendrerit leo convallis non. Nunc nec viverra odio. Vivamus justo mauris, eleifend id urna eget, pharetra porttitor nisl. Sed tempus non nibh non euismod. Praesent pulvinar sem ut tempor lacinia. Vivamus volutpat, tortor ac efficitur maximus, magna dolor egestas nulla, et sollicitudin justo orci sit amet mi. Nullam vel pharetra dolor.</p>
                     </div>
                 </div>
             </div>

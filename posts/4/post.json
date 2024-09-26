@@ -3,6 +3,8 @@
     "description": "This is a private post to test functionality and make sure that the site is secure!",
     "images": null,
     "likes": null,
+    "liked": null,
+    "bookmarked": null,
     "post_id": "4",
     "privacy": "on",
     "title": "Private Post!",

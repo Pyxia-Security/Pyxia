@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 #Programmed and Developed by @OfficialJavaScript of Pyxia Security.
-from flask import Flask, render_template, redirect, request, session, abort
+from flask import Flask, render_template, redirect, request, session, abort, url_for
 import os, flask_login, shutil, json
 from flask_login import current_user
 from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
 from pathlib import Path
-from post_creator import scan_upload, create_list, create_post, total_posts, change_post_total_by_one, create_post_folder, file_mime_type, change_post_total_by_minus_one, load_posts, read_posts, read_likes, read_comments, add_like, check_viewable, remove_like, bookmark_post, unbookmark_post, add_comment
+from post_creator import *
+from chat_creator import *
 from user_agents import parse
 
 app = Flask(__name__)
@@ -17,6 +18,7 @@ app.config["RECAPTCHA_SECRET_KEY"] = config("RECAPTCHA_SECRET_KEY")
 app.config["RECAPTCHA_SITE_KEY"] = config("RECAPTCHA_SITE_KEY")
 app.config["RECAPTCHA_ENABLED"] = config("RECAPTCHA_ENABLED")
 app.config['UPLOAD_FOLDER'] = "C:\\Digi Project - Social Media\\Pyxia\\posts\\"
+app.config['PFPUPLOAD_FOLDER'] = "C:\\Digi Project - Social Media\\Pyxia\\static\\pfp\\"
 recaptcha = ReCaptcha(app=app)
 db.init_app(app)
 login_manager = flask_login.LoginManager()
@@ -29,6 +31,7 @@ class User(db.Model, flask_login.UserMixin):
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     email: Mapped[str]
+    age: Mapped[int]
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -55,7 +58,7 @@ def home():
     session['robot'] = False
     if current_user.is_authenticated == False:
             return redirect('/')
-    posts_list = load_posts(home_screen_posts, read_friends(current_user.id))
+    posts_list = load_posts(home_screen_posts, read_friends(current_user.id), current_user.id)
     post_info = {
         "posts": [
             
@@ -65,6 +68,10 @@ def home():
         info = read_posts(post)
         likes = read_likes(info["post_id"])
         info["likes"] = likes
+        liked = check_if_liked(info["post_id"], current_user.id)
+        info["liked"] = liked
+        bookmarked = check_if_bookmarked(int(info["post_id"]), current_user.id)
+        info["bookmarked"] = bookmarked
         post_info["posts"].append(info)
     return render_template("index.html", posts=post_info)
         
@@ -87,6 +94,10 @@ def posts_page(id):
             return abort(404)
         likes = read_likes(id)
         data["likes"] = likes
+        liked = check_if_liked(post_id, current_user.id)
+        data["liked"] = liked
+        bookmarked = check_if_bookmarked(post_id, current_user.id)
+        data["bookmarked"] = bookmarked
         comments = read_comments(post_id)
         return render_template("posts.html", post=data, comments=comments["comments"])
     else:
@@ -106,7 +117,8 @@ def like_post(id):
     elif response == "not_readable":
         return "", 403
     add_like(post_to_be_liked, current_user.id)
-    return "", 201
+    likes = read_likes(post_to_be_liked)
+    return str(likes), 201
 
 @app.route('/pyxia/unlike_post/<id>', methods=['POST'])
 def unlike_post(id):
@@ -124,7 +136,8 @@ def unlike_post(id):
     remove_response = remove_like(post_to_be_unliked, current_user.id)
     if remove_response == "not_liked":
         return "", 403
-    return "", 201
+    likes = read_likes(post_to_be_unliked)
+    return str(likes), 201
         
 @app.route('/pyxia/save_post/<id>', methods=['POST'])
 def save_post(id):
@@ -160,7 +173,7 @@ def unsave_post(id):
     bookmark_response = unbookmark_post(post_to_be_saved, current_user.id)
     if bookmark_response == "not_saved":
         return  "", 403
-    return "", 200
+    return "", 201
    
 @app.route('/pyxia/add_comment/<id>', methods=['POST'])
 def add_comment_page(id):
@@ -180,6 +193,59 @@ def add_comment_page(id):
         return abort(405, "Content larger than 300")
     add_comment(post_id, current_user.id, current_user.username, request.form.get('comment'))
     return redirect(f'/pyxia/posts/{post_id}')
+   
+@app.route('/pyxia/update_description', methods=['POST'])
+def description():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    change_description(current_user.id, request.form.get('description'))
+    return redirect('/pyxia/profile')
+
+@app.route('/pyxia/profile/change_pfp', methods=['GET'])
+def change_pfp():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    if request.method == "GET":
+        return render_template("change_pfp.html")
+    
+@app.route('/pyxia/profile/change_pfp_post', methods=['POST'])
+def change_pfp_post():
+    uploaded_file = request.files['file']
+    if uploaded_file.filename != '':
+        mimes = ['image/jpeg', 'image/jpg', 'image/png']
+        if uploaded_file.filename.lower().endswith('.png'):
+            file_type = ".png"
+        elif uploaded_file.filename.lower().endswith(('.jpg')):
+            file_type = ".jpg"
+        elif uploaded_file.filename.lower().endswith(('.jpeg')):
+            file_type = ".jpeg"
+        else:
+            return redirect('/pyxia/profile/change_pfp')
+        uploaded_file.save(os.path.join(app.config["PFPUPLOAD_FOLDER"], f"{current_user.id}{file_type}"))
+        custom_pfp_data(current_user.id, file_type)
+        scan_result = scan_upload(os.path.join(app.config["PFPUPLOAD_FOLDER"], f"{current_user.id}{file_type}"))
+        if scan_result == "malware":
+            post_path = Path(f"users/pfp/{current_user.id}.{file_type}")
+            os.remove(post_path)
+            return redirect('/pyxia/profile/change_pfp')
+        mime = file_mime_type(os.path.join(app.config["PFPUPLOAD_FOLDER"], f"{current_user.id}{file_type}"))
+        if mime not in mimes:
+            post_path = Path(f"users/pfp/{current_user.id}.{file_type}")
+            os.remove(post_path)
+            return redirect('/pyxia/profile/change_pfp')
+    return redirect('/pyxia/profile')
+
+@app.route('/pyxia/profile/<id>', methods=['GET'])
+def user_profile(user_id):
+    
+    return user_id
+   
+@app.route('/filething', methods=['POST'])
+def file_thing():
+    uploaded_file = request.files['file']
+    if uploaded_file.filename != '':
+        uploaded_file.save(uploaded_file.filename)
+    return redirect('/')
    
 def get_user_agent():
     if "user_agent" in session:
@@ -233,8 +299,7 @@ def login():
                     flask_login.login_user(user)
                     session['error'] = "False"
                     session['robot'] = False
-                    check_if_exists(current_user.id, username)
-                    return redirect('/')
+                    return redirect('/pyxia')
                 else:
                     session['error'] = True
                     return redirect('/login')
@@ -281,8 +346,12 @@ def signup():
         return render_template("signup.html", error=False, already_exists=False)
     else:
         if recaptcha.verify():
+            ages = ['16', '18']
             email = request.form.get('email')
             username = request.form.get('username')
+            age = request.form.get('age')
+            if age not in ages:
+                return redirect('signup')
             chkemail = check_email(email)
             if chkemail == True or chkemail == "True":
                 session['already_exists'] = True
@@ -301,15 +370,53 @@ def signup():
                 user = User(
                     email=email,
                     username=username,
-                    password=request.form.get('password')
+                    password=request.form.get('password'),
+                    age=age
                 )
                 db.session.add(user)
                 db.session.commit()
-                
-                return redirect('/login-ert')
+                user_for_login = get_user(username)
+                flask_login.login_user(user_for_login)
+                create_user_file(current_user.id, username, age)
+                return redirect('/pyxia')
         else:
             session['robot'] = True
             redirect('/signup')
+
+@app.route('/pyxia/profile', methods=['GET'])
+def profile_page():
+    if current_user.is_authenticated == False:
+        return redirect('/') 
+    user_data = read_user(current_user.id)
+    if user_data["custom_pfp"] == True:
+        image_data = get_image(user_data)
+    else:
+        image_data = None
+    return render_template("myprofile.html", user=user_data, pfp=image_data)
+
+@app.route('/pyxia/search', methods=['GET'])
+def search():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    return render_template("search.html")
+
+@app.route('/pyxia/friends', methods=['GET'])
+def friends():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    return render_template("friends.html")
+
+@app.route('/pyxia/trending', methods=['GET'])
+def trending():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    return render_template("trending.html")
+
+@app.route('/pyxia/clips', methods=['GET'])
+def clips():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    return render_template("clips.html")
 
 @app.route('/pyxia/create_post', methods=['POST'])
 def file_upload():
@@ -367,17 +474,21 @@ def test_file_upload():
         return redirect('/')
     return render_template("test_upload.html")
     
-def check_if_exists(id, username):
+def check_if_exists(id):
     file = Path(f"users/{id}.json")
     if file.is_file():
-        pass
-    else:
-        create_user_file(id, username)
+        return "yes"
 
-def create_user_file(id, username):
-    friends = {
+def create_user_file(user_id, username, age):
+    data = {
+        "age": age,
+        "chat_rooms": [],
+        "custom_pfp": False,
+        "pfp_type": False,
+        "username": username,
+        "user_id": user_id,
         "friends": [
-            f"{id}"
+            f"{user_id}"
         ],
         "saved_posts": [
             
@@ -387,13 +498,77 @@ def create_user_file(id, username):
             
         ]
     }
-    with open(f'users/{id}.json', 'w') as outfile:
-        json.dump(friends, outfile, sort_keys=True, indent=4)
+    with open(f'users/{user_id}.json', 'w') as outfile:
+        json.dump(data, outfile, sort_keys=True, indent=4)
 
 def read_friends(id):
     with open(f'users/{id}.json', 'r') as data:
         user_data = json.load(data)
         return user_data["friends"]
+    
+def get_image(user_data):
+    data = url_for('static', filename=f'pfp/{ user_data["user_id"]}{ user_data["pfp_type"] }')
+    return data
+
+@app.route("/pyxia/chat", methods=['GET'])
+def chat():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    chats = read_user_chats(current_user.id)
+    return render_template("chathome.html", chats=chats)
+
+@app.route("/pyxia/chat/<chat_id>", methods=['GET'])
+def chat_viewer(chat_id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        id_for_chat = int(chat_id)
+    except ValueError:
+        return abort(404)
+    exist = check_if_exists_chat(id_for_chat)
+    if exist != "exists":
+        return abort(404)
+    canread = check_if_user_can_read(current_user.id, id_for_chat)
+    if canread != "can_read":
+        return abort(401)
+    return render_template("chatroom.html", chat_id=chat_id)
+
+@app.route("/pyxia/get_chat/<chat_id>")
+def get_chat(chat_id):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    try:
+        id_for_chat = int(chat_id)
+    except ValueError:
+        return abort(404)
+    exist = check_if_exists_chat(id_for_chat)
+    if exist != "exists":
+        return abort(404)
+    canread = check_if_user_can_read(current_user.id, id_for_chat)
+    if canread != "can_read":
+        return abort(401)
+    messages = read_messages(id_for_chat)
+    return render_template("chatroom_chat.html", messages=messages)
+
+@app.route('/pyxia/send_message/<chat_id>', methods=['POST'])
+def send_message(chat_id):
+    if current_user.is_authenticated == False:
+        return "", 403
+    try:
+        id_for_chat = int(chat_id)
+    except ValueError:
+        return "", 404
+    exist = check_if_exists_chat(id_for_chat)
+    if exist != "exists":
+        return "", 404
+    canread = check_if_user_can_read(current_user.id, id_for_chat)
+    if canread != "can_read":
+        return "", 401
+    message = request.form.get("message")
+    if int(len(message)) > 301:
+        return "Message too long", 404
+    add_message(id_for_chat, current_user.id, current_user.username, message)
+    return "", 200
 
 @login_manager.unauthorized_handler
 def login_unauthorized_handler():

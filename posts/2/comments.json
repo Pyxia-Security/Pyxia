@@ -9,6 +9,11 @@
             "content": "Booooo! - Morgan",
             "user": "Seb",
             "user_id": 1
+        },
+        {
+            "content": "Hi",
+            "user": "John",
+            "user_id": 1
         }
     ]
 }

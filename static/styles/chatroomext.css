@@ -1,0 +1,31 @@
+html {
+    font-family: 'Verdana';
+    background-color: #704264;
+
+}
+
+.message_container {
+    font-size: 1.5em;
+    display: flex;
+}
+
+.message_wrapper {
+    background-color: #DBAFA0;
+    border: solid black 2px;
+    border-radius: 10px;
+    padding-left: .5vw;
+    padding-right: .5vw;    
+    height: auto;
+    width: auto;
+    margin-left: 1vw;
+    margin-bottom: 1vw;
+}
+
+.chat_inner_container {
+    margin-top: 2vh;
+}
+
+.chat_name {
+    text-align: center;
+}
+
