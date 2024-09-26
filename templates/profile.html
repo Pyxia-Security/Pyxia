@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/profile.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/myprofile.css') }}">
@@ -18,6 +19,7 @@
                 <button class="account-button" onclick="profile()"><p class="profile-user-name">{{ current_user.username }}</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
                 <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/notification.png') }}" class="nav-icons"></button>
                 <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons"></button> 
+                <button class="add_post" onclick="add_post()"><img width="50vw" src="{{ url_for('static', filename='images/add_post.png') }}" class="nav-icons"></button> 
             </div>
         </header>
         <div id="notification-overlay">
@@ -41,6 +43,9 @@
                     <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw">
                         <p class="sidebar-button-text">Clips</p>
                     </button>
+                    <button class="sidebar-button" onclick="messages()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw">
+                        <p class="sidebar-button-text">Messages</p>
+                    </button>
                 </div>
             </div>
             <div class="profile-container">
@@ -56,7 +61,12 @@
                         </div>
                     </div>
                     <div class="profile-edit-description">
-                        <button onclick="message({{  user['user_id'])  }}" class="edit-button">Message</button>
+                        {% if friend == True %}
+                            <button onclick="remove_friend({{  user['user_id'] }})" class="edit-button">Remove Friend</button>
+                        {% else %}
+                            <button onclick="request_friend({{ user['user_id'] }})" class="edit-button">Add Friend</button>
+                        {% endif %}
+                        <button onclick="message({{  user['user_id']  }})" class="edit-button">Message</button>
                     </div>
                     <div class="profile-inner">
                         <p class="profile-description">{{ user["description"] }}</p>

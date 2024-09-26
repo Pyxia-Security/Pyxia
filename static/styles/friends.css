@@ -48,6 +48,8 @@
 .fc-friend-name {
     margin-top: auto;
     margin-bottom: auto;
+    color: black;
+    text-decoration: none;
 }
 
 .fc-friend-image {

@@ -16,6 +16,7 @@
                 <button class="account-button" onclick="profile()"><p class="profile-user-name">{{ current_user.username }}</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
                 <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/menu.png') }}" class="nav-icons"></button>
                 <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons"></button> 
+                <button class="add_post" onclick="add_post()"><img width="50vw" src="{{ url_for('static', filename='images/add_post.png') }}" class="nav-icons"></button> 
             </div>
         </header>
         <div id="notification-overlay">
@@ -38,6 +39,9 @@
                     </button>
                     <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw">
                         <p class="sidebar-button-text">Clips</p>
+                    </button>
+                    <button class="sidebar-button" onclick="messages()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw">
+                        <p class="sidebar-button-text">Messages</p>
                     </button>
                 </div>
             </div>

@@ -4,14 +4,39 @@
         [
             "5555905904050573159",
             "Test Chat"
+        ],
+        [
+            "4349890743122607464",
+            "Seb and John"
+        ],
+        [
+            "6656114158074143321",
+            "Seb and John"
+        ],
+        [
+            "9032028352037417998",
+            "Seb and BlueFloyd"
+        ],
+        [
+            "3352877109875949907",
+            "Seb and Doggington"
         ]
+    ],
+    "conversation_with": [
+        "1",
+        "15",
+        "8"
     ],
     "custom_pfp": true,
     "description": "Hello World! Welcome my Pyxia page! I am the developer and CEO of Pyxia-Security.",
     "friends": [
         "2",
-        "9"
+        "1",
+        "15",
+        "8"
     ],
+    "login_date": "2024-09-26 22:04:00",
+    "logoff_time": 1,
     "pfp_type": ".jpg",
     "saved_posts": [
         3

@@ -1,4 +1,7 @@
 {
+    "chat_name": [
+        "Test dev chat"
+    ],
     "messages": [
         [
             2,
@@ -144,6 +147,21 @@
             2,
             "Seb",
             "hi"
+        ],
+        [
+            2,
+            "Seb",
+            "im seb html css javascript python"
+        ],
+        [
+            2,
+            "Seb",
+            "oieshugzsdli\u00a8\u2248brwerbfwughobewfhibfuefwhdbfu9hubefiwhoieshugzsdli\u00a8\u2248brwerbfwughobewfhibfuefwhdbfu9hubefiwhoieshugzsdli\u00a8\u2248brwerbfwughobewfhibfuefwhdbfu9hubefiwhoieshugzsdli\u00a8\u2248brwerbfwughobewfhibfuefwhdbfu9"
+        ],
+        [
+            2,
+            "Seb",
+            "Is this chat working?\r\n"
         ]
     ],
     "users": [

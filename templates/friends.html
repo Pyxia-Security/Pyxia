@@ -17,6 +17,7 @@
                 <button class="account-button" onclick="profile()"><p class="profile-user-name">{{ current_user.username }}</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
                 <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/notification.png') }}" class="nav-icons"></button>
                 <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons"></button> 
+                <button class="add_post" onclick="add_post()"><img width="50vw" src="{{ url_for('static', filename='images/add_post.png') }}" class="nav-icons"></button> 
             </div>
         </header>
         <div id="notification-overlay">
@@ -40,6 +41,9 @@
                     <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw">
                         <p class="sidebar-button-text">Clips</p>
                     </button>
+                    <button class="sidebar-button" onclick="messages()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw">
+                        <p class="sidebar-button-text">Messages</p>
+                    </button>
                 </div>
             </div>
             <div class="friend-container">
@@ -48,21 +52,13 @@
                 </div> 
                 <div class="fc-inner">
                     <div class="fc-inner-container">
-                        <div class="fc-friend-box">
-                            <img class="fc-friend-image" height="100%" src="{{ url_for('static', filename='images/profile.png') }}">
-                            <h3 class="fc-friend-name">Bob</h3>
-                            <button class="fc-unfriend-button"><img height="70%" src="{{ url_for('static', filename='images/exit.png') }}"></button>
-                        </div>
-                        <div class="fc-friend-box">
-                            <img class="fc-friend-image" height="100%" src="{{ url_for('static', filename='images/profile.png') }}">
-                            <h3 class="fc-friend-name">Jim</h3>
-                            <button class="fc-unfriend-button"><img height="70%" src="{{ url_for('static', filename='images/exit.png') }}"></button>
-                        </div>
-                        <div class="fc-friend-box">
-                            <img class="fc-friend-image" height="100%" src="{{ url_for('static', filename='images/profile.png') }}">
-                            <h3 class="fc-friend-name">Steve </h3>
-                            <button class="fc-unfriend-button"><img height="70%" src="{{ url_for('static', filename='images/exit.png') }}"></button>
-                        </div>
+                        {% for friend in friends %}
+                            <div class="fc-friend-box">
+                                <img class="fc-friend-image" height="100%" src="{{ url_for('static', filename='images/profile.png') }}">
+                                <a class="fc-friend-name" href="/pyxia/profile/{{ friend[1] }}"><h3 class="fc-friend-name">{{ friend[0] }}</h3></a>
+                                <button class="fc-unfriend-button"><img height="70%" src="{{ url_for('static', filename='images/exit.png') }}"></button>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

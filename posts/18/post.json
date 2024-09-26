@@ -1,0 +1,20 @@
+{
+    "age_rating": "16",
+    "bookmarked": null,
+    "clips": true,
+    "clips_list": [
+        "C:\\Digi Project - Social Media\\Pyxia\\posts\\18\\post0.mp4"
+    ],
+    "description": "have a look at this funny mario video.",
+    "images": [
+        "C:\\Digi Project - Social Media\\Pyxia\\posts\\18\\post1.mp4"
+    ],
+    "liked": null,
+    "likes": null,
+    "post_id": "18",
+    "privacy": null,
+    "title": "Mario video",
+    "total_images": 1,
+    "user": "Seb",
+    "user_id": 2
+}

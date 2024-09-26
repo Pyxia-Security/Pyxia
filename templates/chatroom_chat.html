@@ -8,6 +8,13 @@
     </head>
     <body id="site">
         <div class="chat_inner_container">
+            {% if messages == [] %}
+                <div class="message_container">
+                    <div class="message_wrapper">
+                        <h3 class="message">Server: No messages found. Enter a message in the box below.</h3>
+                    </div>
+                </div>
+            {% endif %}
             {% for message in messages %}
             <div class="message_container">
                 <div class="message_wrapper">

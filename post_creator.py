@@ -5,6 +5,10 @@ from pathlib import Path
 def total_posts():
     with open('posts/total_post.txt', 'r') as post:
         return post.read()
+    
+def total_clips():
+    with open('posts/clips/total_clips.txt', 'r') as clip:
+        return clip.read()
 
 def change_post_total_by_one():
     with open('posts/total_post.txt', 'r') as post:
@@ -14,20 +18,20 @@ def change_post_total_by_one():
         total += 1
         post.write(str(total))
         
+def change_clip_total_by_one():
+    with open('posts/clips/total_clips.txt', 'r') as clip:
+        total = int(clip.read())
+        
+    with open('posts/clips/total_clips.txt', 'w') as clip:
+        total += 1
+        clip.write(str(total))
+        
 def change_post_total_by_minus_one():
     with open('posts/total_post.txt', 'r') as post:
         total = int(post.read())
         
     with open('posts/total_post.txt', 'w') as post:
         total -= 1
-        post.write(str(total))
-        
-def change_private_total_by_one():
-    with open('posts/total_post.txt', 'r') as post:
-        total = int(post.read())
-        
-    with open('posts/total_post.txt', 'w') as post:
-        total += 1
         post.write(str(total))
 
 def scan_file(file_path):
@@ -42,7 +46,7 @@ def scan_upload(file_path):
     else:
         return "clean"
     
-def create_list(id, title, desc, user, userid, privacy, images, total_images, age_rating):
+def create_list(id, title, desc, user, userid, privacy, images, total_images, age_rating, clips, clips_list):
     created_list = {
         "post_id": id,
         "title": title,
@@ -55,7 +59,25 @@ def create_list(id, title, desc, user, userid, privacy, images, total_images, ag
         "privacy": privacy,
         "images": images,
         "total_images": total_images,
-        "age_rating": age_rating
+        "age_rating": age_rating,
+        "clips": clips,
+        "clips_list": clips_list
+    }
+    return created_list
+
+def create_clips_template(clips_list):
+    created_list = {
+        "post_id": clips_list["post_id"],
+        "title": clips_list["title"],
+        "description": clips_list["description"],
+        "likes": None,
+        "liked": None,
+        "bookmarked": None,
+        "user": clips_list["user"],
+        "user_id": clips_list["user_id"],
+        "privacy": clips_list["privacy"],
+        "age_rating": clips_list["age_rating"],
+        "clips_list": clips_list["clips_list"]
     }
     return created_list
 
@@ -69,6 +91,13 @@ def create_post_folder(post_id):
         file_path.mkdir(exist_ok=False)
     except FileExistsError:
         return "alreadyexists"
+
+def create_clips_folder(post_id):
+    try:
+        file_path = Path(f"posts/clips/{post_id}")
+        file_path.mkdir(exist_ok=False)
+    except FileExistsError:
+        pass
 
 def addposttl(post_id, privacy, user_id):
     with open("posts/total_post.json", 'r+') as post:
@@ -90,13 +119,44 @@ def addposttl(post_id, privacy, user_id):
             post.seek(0)
             json.dump(data, post, sort_keys=True, indent=4)
             post.truncate()
+    
+def addclipttl(post_id, privacy, user_id):
+    with open("posts/clips/total_clips.json", 'r+') as post:
+        data = json.load(post)
+        try: 
+            if post_id in data["clips"]["clip"]:
+                return "alreadyexists"
+            if post_id in data["clips"]["clip"]:
+                return "alreadyexists"
+        except IndexError:
+            pass
+        if privacy == "on":
+            data["private_clips"]["clip"].append([post_id, str(user_id)])
+            post.seek(0)
+            json.dump(data, post, sort_keys=True, indent=4)
+            post.truncate()
+        else:
+            data["clips"]["clip"].append(post_id)
+            post.seek(0)
+            json.dump(data, post, sort_keys=True, indent=4)
+            post.truncate()
 
 def create_post(post_info):
     with open(f'posts/{post_info["post_id"]}/post.json', 'w') as outfile:
         json.dump(post_info, outfile, sort_keys=True, indent=4)
     addposttl(post_info["post_id"], post_info["privacy"], post_info["user_id"])
     create_post_extras(post_info["post_id"])
+    if post_info["clips"] == True:
+        clips_list(post_info)
     return "completed"
+
+def clips_list(post_info):
+    create_clips_folder(post_info["post_id"])
+    temp_data = create_clips_template(post_info)
+    with open(f'posts/clips/{post_info["post_id"]}/clips.json', 'w') as file:
+        json.dump(temp_data, file, sort_keys=True, indent=4)
+    addclipttl(post_info["post_id"], post_info["privacy"], post_info["user_id"])
+    change_clip_total_by_one()
 
 def create_post_extras(post_id):
     comments = {
@@ -183,8 +243,6 @@ def unbookmark_post(post_id, user_id):
 def check_if_bookmarked(post_id, user_id):
     with open(f'users/{user_id}.json', 'r') as user_file:
         user_data = json.load(user_file)
-        print(user_data)
-        print(f"Post_id: {post_id}, user_id: {user_id}")
         if post_id in user_data["saved_posts"]:
             return "bookmarked"
         else:
@@ -220,7 +278,7 @@ def add_comment(post_id, user_id, user_username, content):
         json.dump(comment_data, comments_file, sort_keys=True, indent=4)
         comments_file.truncate()
     
-def load_posts(home_screen_posts, friends_ids, user_id):
+def load_posts(home_screen_posts, friends_ids):
     with open("posts/total_post.json", 'r') as post:
         data = json.load(post)
     viewable_posts = []
@@ -244,9 +302,9 @@ def load_posts(home_screen_posts, friends_ids, user_id):
     else:
         nums_to_be_used = []
         for _ in range(home_screen_posts):
-            a_post = random.randint(1, int(len(viewable_posts)) - 1)
+            a_post = random.randint(1, int(len(viewable_posts)))
             while a_post in nums_to_be_used:
-                a_post = random.randint(1, int(len(viewable_posts)) - 1)
+                a_post = random.randint(1, int(len(viewable_posts)))
                 if a_post not in nums_to_be_used:
                     break
             nums_to_be_used.append(a_post)
@@ -254,6 +312,41 @@ def load_posts(home_screen_posts, friends_ids, user_id):
         for numbers in nums_to_be_used:
             posts_to_be_used.append(viewable_posts[numbers - 1])
     return posts_to_be_used
+
+def load_clips(home_screen_posts, friends_ids):
+    with open("posts/clips/total_clips.json", 'r') as post:
+        data = json.load(post)
+    viewable_clips = []
+    for friends in data["private_clips"]["clip"]:
+        if friends[1] in friends_ids:
+            viewable_clips.append(friends[0])
+    for pub_data in data["clips"]["clip"]:
+        viewable_clips.append(pub_data)
+    if home_screen_posts > len(viewable_clips):
+        nums_to_be_used = []
+        for _ in viewable_clips:
+            a_clip = random.randint(0, int(len(viewable_clips)) - 1)
+            while a_clip in nums_to_be_used:
+                a_clip = random.randint(0, int(len(viewable_clips)) - 1)
+                if a_clip not in nums_to_be_used:
+                    break
+            nums_to_be_used.append(a_clip)
+        clips_to_be_used = []
+        for numbers in nums_to_be_used:
+            clips_to_be_used.append(viewable_clips[numbers])
+    else:
+        nums_to_be_used = []
+        for _ in range(home_screen_posts):
+            a_post = random.randint(1, int(len(viewable_clips)) - 1)
+            while a_post in nums_to_be_used:
+                a_post = random.randint(1, int(len(viewable_clips)) - 1)
+                if a_post not in nums_to_be_used:
+                    break
+            nums_to_be_used.append(a_post)
+        clips_to_be_used = []
+        for numbers in nums_to_be_used:
+            clips_to_be_used.append(viewable_clips[numbers - 1])
+    return clips_to_be_used
 
 def check_user_age(user_id):
     with open(f"users/{user_id}.json", 'r') as user_data:
@@ -263,6 +356,14 @@ def check_user_age(user_id):
 def read_posts(post_id):
     try:
         with open(f"posts/{post_id}/post.json", 'r') as post_json:
+            data = json.load(post_json)
+            return data
+    except FileNotFoundError:
+        return "error"
+    
+def read_clips(post_id):
+    try:
+        with open(f"posts/clips/{post_id}/clips.json", 'r') as post_json:
             data = json.load(post_json)
             return data
     except FileNotFoundError:

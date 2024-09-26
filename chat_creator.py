@@ -91,7 +91,30 @@ def check_if_user_can_read(user_id, chat_id):
             if str(chat[0]) == str(chat_id):
                 return "can_read"
         return "cannot_read"
-            
-#chat_room = create_chat_room(1, 2)
-
-#add_message(5555905904050573159, 1, "John", "I recieved the message well!")
+    
+def get_chat_name(chat_id):
+    with open(f'chat/{chat_id}/chat.json', 'r') as chat:
+        data = json.load(chat)
+        return data["chat_name"]
+    
+def add_user_conversation_to_user_list(user_id, friend_id):
+    with open(f'users/{user_id}.json', 'r+') as user:
+        data = json.load(user)
+        data["conversation_with"].append(str(friend_id))
+        user.seek(0)
+        json.dump(data, user, sort_keys=True, indent=4)
+        user.truncate()
+    with open(f'users/{friend_id}.json', 'r+') as user:
+        data = json.load(user)
+        data["conversation_with"].append(str(user_id))
+        user.seek(0)
+        json.dump(data, user, sort_keys=True, indent=4)
+        user.truncate()
+        
+def check_user_conversation_list(user_id, friend_id):
+    with open(f'users/{user_id}.json', 'r+') as user:
+        data = json.load(user)
+        if str(friend_id) in data["conversation_with"]:
+            return "already_exists"
+        else:
+            return "doesnt_exist"

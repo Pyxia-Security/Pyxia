@@ -1,0 +1,16 @@
+{
+    "age_rating": "18",
+    "bookmarked": null,
+    "description": "imagenes de flores que pensaste que iba a hablar de perros",
+    "images": [
+        "C:\\Digi Project - Social Media\\Pyxia\\posts\\8\\post1.jpg"
+    ],
+    "liked": null,
+    "likes": null,
+    "post_id": "8",
+    "privacy": null,
+    "title": "Los perros me hacen feliz",
+    "total_images": 1,
+    "user": "Emi",
+    "user_id": 12
+}

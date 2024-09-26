@@ -1,0 +1,36 @@
+{
+    "chat_name": [
+        "Seb and Doggington"
+    ],
+    "messages": [
+        [
+            8,
+            "Doggington",
+            "Hi!"
+        ],
+        [
+            2,
+            "Seb",
+            "Hi Doggington!!\r\n\r\nHow are you doing?"
+        ],
+        [
+            8,
+            "Doggington",
+            "I'm doing good!"
+        ],
+        [
+            2,
+            "Seb",
+            "Hi"
+        ],
+        [
+            8,
+            "Doggington",
+            "Hi"
+        ]
+    ],
+    "users": [
+        2,
+        8
+    ]
+}

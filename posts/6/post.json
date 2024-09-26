@@ -1,0 +1,16 @@
+{
+    "age_rating": "16",
+    "bookmarked": null,
+    "description": "My first hello to john",
+    "images": [
+        "C:\\Digi Project - Social Media\\Pyxia\\posts\\6\\post1.png"
+    ],
+    "liked": null,
+    "likes": null,
+    "post_id": "6",
+    "privacy": null,
+    "title": "hello john",
+    "total_images": 1,
+    "user": "Emi",
+    "user_id": 12
+}

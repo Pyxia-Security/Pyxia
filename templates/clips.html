@@ -16,6 +16,7 @@
                 <button class="account-button" onclick="profile()"><p class="profile-user-name">{{ current_user.username }}</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
                 <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/notification.png') }}" class="nav-icons"></button>
                 <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons"></button> 
+                <button class="add_post" onclick="add_post()"><img width="50vw" src="{{ url_for('static', filename='images/add_post.png') }}" class="nav-icons"></button> 
             </div>
         </header>
         <div id="notification-overlay">
@@ -39,97 +40,52 @@
                     <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw">
                         <p class="sidebar-button-text">Clips</p>
                     </button>
+                    <button class="sidebar-button" onclick="messages()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw">
+                        <p class="sidebar-button-text">Messages</p>
+                    </button>
                 </div>
             </div>
             <div class="post-container">
                 <div class="post-wrapper">
                     <div class="posts">
-                        <div class="post">
-                            <div class="post-user-account">
-                                <img class="post-username-image" height="75vh" src="{{ url_for('static', filename='images/profile.png') }}">
-                                <h2 class="post-username-text">Person 1</h2>
-                                <h3 class="posted-date">30s ago</h3>
-                            </div>
-                            <div class="post-title">
-                                <a href="post/1" class="post-title-link"><h2>Post 1</h1></a>
-                            </div>
-                            <div class="post-image-container">
-                                <img height="auto" class="post-image" src="{{ url_for('static', filename='images/testpost.png') }}">
-                            </div>
-                            <div class="post-description">
-                                <div class="post-description-container">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu efficitur nisi, quis ullamcorper orci. Sed facilisis varius ullamcorper. Suspendisse quis ligula pretium, ornare ligula id, ornare ex. Curabitur condimentum metus et accumsan efficitur. Nunc pharetra ex sit amet venenatis vulputate. Suspendisse potenti. Phasellus orci nisi, vulputate non mi quis, lobortis elementum eros.</p>
-                                </div>
-                            </div>
-                            <div class="post-interaction">
-                                <button class="post-interact-button"><img height="50vh" src="{{ url_for('static', filename='images/like.png') }}"></button>
-                                <button class="post-interact-button post-bookmark-button"><img height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
-                                <button class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
-                            </div>
-                            <div class="comment-button">
-                                <button class="post-comment-button"><h2>Comments (0)</h2></button>
-                            </div>
-                        </div>
-                        <div class="posts">
-                            <div class="post">
-                                <div class="post-user-account">
-                                    <img class="post-username-image" height="75vh" src="{{ url_for('static', filename='images/profile.png') }}">
-                                    <h2 class="post-username-text">Person 1</h2>
-                                    <h3 class="posted-date">30s ago</h3>
-                                </div>
-                                <div class="post-title">
-                                    <a href="post/2" class="post-title-link"><h2>Post 2</h1></a>
-                                </div>
-                                <div class="post-image-container">
-                                    <img height="auto" class="post-image" src="{{ url_for('static', filename='images/testpost.png') }}">
-                                </div>
-                                <div class="post-description">
-                                    <div class="post-description-container">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu efficitur nisi, quis ullamcorper orci. Sed facilisis varius ullamcorper. Suspendisse quis ligula pretium, ornare ligula id, ornare ex. Curabitur condimentum metus et accumsan efficitur. Nunc pharetra ex sit amet venenatis vulputate. Suspendisse potenti. Phasellus orci nisi, vulputate non mi quis, lobortis elementum eros.</p>
+                        {% for clip in clips["clips"] %}
+                            <div class="posts">
+                                <div class="post">
+                                    <div class="post-user-account">
+                                        <img class="post-username-image" height="75vh" src="{{ url_for('static', filename='images/profile.png') }}">
+                                        <h2 class="post-username-text">{{ clip["user"] }}</h2>
+                                    </div>
+                                    <div class="post-title">
+                                        <a href="pyxia/posts/{{ clip['post_id'] }}" class="post-title-link"><h2>{{ clip["title"] }}</h1></a>
+                                    </div>
+                                    <div class="post-image-container">
+                                        <img height="auto" class="post-image" src="{{ url_for('static', filename='images/testpost.png') }}">
+                                    </div>
+                                    <div class="post-description">
+                                        <div class="post-description-container">
+                                            <p>{{ clip["description"] }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="post-interaction">
+                                        {% if clip["liked"] == "liked" %}
+                                            <button id="like_button_{{clip['post_id']}}" onclick="unlike_post({{clip['post_id']}})" class="post-interact-button"><img id="like_button_img_{{clip['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/liked.png') }}"></button>
+                                        {% else %}
+                                            <button id="like_button_{{clip['post_id']}}" onclick="like_post({{clip['post_id']}})" class="post-interact-button"><img id="like_button_img_{{clip['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/like.png') }}"></button>
+                                        {% endif %}
+                                        <h2 id="post_likes_{{clip['post_id']}}" class="post-interact-likes">{{ clip["likes"] }}</h2>
+                                        {% if clip["bookmarked"] == "bookmarked" %}
+                                            <button id="bookmark_button_{{clip['post_id']}}" onclick="unsave_post({{clip['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{clip['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmarked.png') }}"></button>
+                                        {% else %}
+                                            <button id="bookmark_button_{{clip['post_id']}}" onclick="save_post({{clip['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{clip['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
+                                        {% endif %}
+                                        <button onclick="open_share({{clip['post_id']}})" class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
                                     </div>
                                 </div>
-                                <div class="post-interaction">
-                                    <button class="post-interact-button"><img height="50vh" src="{{ url_for('static', filename='images/like.png') }}"></button>
-                                    <button class="post-interact-button post-bookmark-button"><img height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
-                                    <button class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
-                                </div>
-                                <div class="comment-button">
-                                    <button class="post-comment-button"><h2>Comments (0)</h2></button>
-                                </div>
                             </div>
-                        </div>
-                        <div class="posts">
-                            <div class="post">
-                                <div class="post-user-account">
-                                    <img class="post-username-image" height="75vh" src="{{ url_for('static', filename='images/profile.png') }}">
-                                    <h2 class="post-username-text">Person 1</h2>
-                                    <h3 class="posted-date">30s ago</h3>
-                                </div>
-                                <div class="post-title">
-                                    <a href="post/3" class="post-title-link"><h2>Post 3</h1></a>
-                                </div>
-                                <div class="post-image-container">
-                                    <img height="auto" class="post-image" src="{{ url_for('static', filename='images/testpost.png') }}">
-                                </div>
-                                <div class="post-description">
-                                    <div class="post-description-container">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu efficitur nisi, quis ullamcorper orci. Sed facilisis varius ullamcorper. Suspendisse quis ligula pretium, ornare ligula id, ornare ex. Curabitur condimentum metus et accumsan efficitur. Nunc pharetra ex sit amet venenatis vulputate. Suspendisse potenti. Phasellus orci nisi, vulputate non mi quis, lobortis elementum eros.</p>
-                                    </div>
-                                </div>
-                                <div class="post-interaction">
-                                    <button class="post-interact-button"><img height="50vh" src="{{ url_for('static', filename='images/like.png') }}"></button>
-                                    <button class="post-interact-button post-bookmark-button"><img height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
-                                    <button class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
-                                </div>
-                                <div class="comment-button">
-                                    <button class="post-comment-button"><h2>Comments (0)</h2></button>
-                                    <a href="/pyxia/chat">hi</a>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>  
+            </div>
         </div>
     </body>
 </html>

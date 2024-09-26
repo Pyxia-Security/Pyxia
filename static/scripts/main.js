@@ -63,7 +63,6 @@ function clips() {
 function like_post(post_id) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        console.log(this.status)
         if (this.status == 201) {
             document.getElementById("like_button_img_" + post_id).src = "/static/images/liked.png";
             document.getElementById("like_button_" + post_id).setAttribute( "onClick", "javascript: unlike_post(" + post_id + ");" );
@@ -125,7 +124,6 @@ function copy_link() {
 function open_share(post_id) {
     var url = document.getElementById("share_link_box");
     url.value = "https://pyxia.tech/pyxia/posts/" + post_id;
-    console.log(url.textContent)
     document.getElementById("share_overlay").style.display = "flex";
 };
 
@@ -147,4 +145,30 @@ function change_pfp() {
 
 function logout() {
     location.href = "/logout";
+}
+
+var check_alive = window.setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.responseText == "redirect") {
+            location.href = "/logout";
+        } else if (this.responseText == "DISABLE") {
+            kill_check_alive()
+        };
+    };
+    var check_alive_request = "/pyxia/check_auth";
+    xhttp.open("POST", check_alive_request, false)
+    xhttp.send();
+}, 60000)
+
+function kill_check_alive() {
+    clearInterval(check_alive)
+}
+
+function add_post() {
+    location.href = "/pyxia/create_post"
+}
+
+function messages() {
+    location.href = "/pyxia/chat"
 }

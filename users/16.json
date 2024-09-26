@@ -1,0 +1,17 @@
+{
+    "age": "16",
+    "chat_rooms": [],
+    "conversation_with": [],
+    "custom_pfp": false,
+    "description": "Hello World! Welcome to Secureas's Pyxia page!",
+    "friends": [
+        "16"
+    ],
+    "login_date": null,
+    "logoff_time": 1,
+    "pfp_type": false,
+    "saved_posts": [],
+    "settings": [],
+    "user_id": 16,
+    "username": "Secureas"
+}

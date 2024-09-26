@@ -1,0 +1,66 @@
+{
+    "chat_name": [
+        "Seb and BlueFloyd"
+    ],
+    "messages": [
+        [
+            15,
+            "BlueFloyd",
+            "Chur bro"
+        ],
+        [
+            15,
+            "BlueFloyd",
+            ""
+        ],
+        [
+            2,
+            "Seb",
+            "Hello there"
+        ],
+        [
+            2,
+            "Seb",
+            "hi"
+        ],
+        [
+            2,
+            "Seb",
+            "asiodjasoijd"
+        ],
+        [
+            15,
+            "BlueFloyd",
+            "This is a test message"
+        ],
+        [
+            15,
+            "BlueFloyd",
+            "Hello comrade"
+        ],
+        [
+            2,
+            "Seb",
+            "Hi!"
+        ],
+        [
+            2,
+            "Seb",
+            ""
+        ],
+        [
+            2,
+            "Seb",
+            ""
+        ],
+        [
+            2,
+            "Seb",
+            ""
+        ]
+    ],
+    "users": [
+        2,
+        15
+    ]
+}

@@ -19,6 +19,11 @@
             "content": "Nice Post!",
             "user": "Doggington",
             "user_id": 8
+        },
+        {
+            "content": "Woah this is wild, I'm one of the first users on Pyxia, the secure social media platformtm",
+            "user": "BlueFloyd",
+            "user_id": 15
         }
     ]
 }

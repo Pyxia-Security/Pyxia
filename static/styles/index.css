@@ -30,19 +30,24 @@ body {
 }
 
 .search,
-.notification {
+.notification,
+.add_post {
     background-color: rgba(0, 0, 0, 0);
     border: none;
     float: right;
 }
 
 .search {
-    margin-left: auto;
-    order: 2;
+    order: 3;
 }
 
 .notification {
-    order: 3;
+    order: 4;
+}
+
+.add_post {
+    margin-left: auto;
+    order: 2;
 }
 
 .account-button {
@@ -54,7 +59,7 @@ body {
     float: right;
     height: 8vh;
     margin-right: 1vw;
-    order: 4;
+    order: 5;
 }
 
 .profile-user-name {

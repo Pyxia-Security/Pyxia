@@ -1,16 +1,27 @@
 {
     "age": "16",
-    "chat_rooms": [],
-    "custom_pfp": false,
-    "pfp_type": false,
-    "user_id": "12",
-    "description": "Hello World! Welcome to Emi's Pyxia page!",
-    "friends": [
-        "12"
+    "chat_rooms": [
+        [
+            "7775808070729931830",
+            "BlueFloyd and Emi"
+        ]
     ],
+    "conversation_with": [
+        "15"
+    ],
+    "custom_pfp": true,
+    "description": "there are no account settings\r\n",
+    "friends": [
+        "12",
+        "15"
+    ],
+    "login_date": null,
+    "logoff_time": 1,
+    "pfp_type": ".jpg",
     "saved_posts": [
         1
     ],
     "settings": [],
+    "user_id": "12",
     "username": "Emi"
 }

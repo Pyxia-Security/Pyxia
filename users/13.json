@@ -1,18 +1,17 @@
-{        
+{
     "age": "18",
     "chat_rooms": [],
+    "conversation_with": [],
     "custom_pfp": false,
-    "pfp_type": false,
-    "username": "NikoBellic",
-    "user_id": "13",
+    "description": "Hello World! Welcome to NikoBellic's Pyxia page!",
     "friends": [
         "13"
     ],
-    "saved_posts": [
-        
-    ],
-    "description": "Hello World! Welcome to NikoBellic's Pyxia page!",
-    "settings": [
-        
-    ]
+    "login_date": null,
+    "logoff_time": 1,
+    "pfp_type": false,
+    "saved_posts": [],
+    "settings": [],
+    "user_id": "13",
+    "username": "NikoBellic"
 }

@@ -4,14 +4,26 @@
         [
             "5555905904050573159",
             "Test Chat"
+        ],
+        [
+            "4349890743122607464",
+            "Seb and John"
+        ],
+        [
+            "6656114158074143321",
+            "Seb and John"
         ]
+    ],
+    "conversation_with": [
+        "1"
     ],
     "custom_pfp": false,
     "description": "Hello World! Welcome to John's Pyxia page!",
     "friends": [
-        "1",
-        "5"
+        "1"
     ],
+    "login_date": null,
+    "logoff_time": 1,
     "pfp_type": false,
     "saved_posts": [
         4,

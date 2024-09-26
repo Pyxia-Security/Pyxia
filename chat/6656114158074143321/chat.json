@@ -1,0 +1,16 @@
+{
+    "chat_name": [
+        "Seb and John"
+    ],
+    "messages": [
+        [
+            2,
+            "Seb",
+            "Time to start the messages!"
+        ]
+    ],
+    "users": [
+        2,
+        1
+    ]
+}

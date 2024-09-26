@@ -1,0 +1,33 @@
+{
+    "age": "16",
+    "chat_rooms": [
+        [
+            "9032028352037417998",
+            "Seb and BlueFloyd"
+        ],
+        [
+            "7775808070729931830",
+            "BlueFloyd and Emi"
+        ]
+    ],
+    "conversation_with": [
+        "2",
+        "12"
+    ],
+    "custom_pfp": true,
+    "description": "Hello World! Welcome to BlueFloyd's Pyxia page!",
+    "friends": [
+        "15",
+        "2",
+        "12"
+    ],
+    "login_date": null,
+    "logoff_time": 1,
+    "pfp_type": ".jpg",
+    "saved_posts": [
+        3
+    ],
+    "settings": [],
+    "user_id": 15,
+    "username": "BlueFloyd"
+}

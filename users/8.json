@@ -1,11 +1,22 @@
 {
     "age": "18",
-    "chat_rooms": [],
+    "chat_rooms": [
+        [
+            "3352877109875949907",
+            "Seb and Doggington"
+        ]
+    ],
+    "conversation_with": [
+        "2"
+    ],
     "custom_pfp": false,
     "description": "Hello World! Welcome to Doggington's Pyxia page! Woop Woop, it works!",
     "friends": [
-        "8"
+        "8",
+        "2"
     ],
+    "login_date": null,
+    "logoff_time": 1,
     "pfp_type": false,
     "saved_posts": [
         4
