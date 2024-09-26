@@ -1211,4 +1211,4 @@ if __name__ == "__main__":
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER) 
     ssl_context.load_cert_chain('server.crt', 'server.key')
     # deepcode ignore RunWithDebugTrue: disable debug in final version, as is currently used for testing/debugging purposes.
-    app.run(host='0.0.0.0', port=443, debug=True, ssl_context=context)
+    app.run(host='0.0.0.0', port=443, debug=False, ssl_context=context)
