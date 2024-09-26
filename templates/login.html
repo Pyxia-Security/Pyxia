@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-nz" id="html">
     <head>
         <title>Pyxia | Log In</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
     </head>
@@ -9,7 +11,7 @@
         <h1 class="name">Log In</h1>
         <div class="login">
             <form method="post" action="/login">
-                <input class="loginusername" type="username" placeholder="Username" name="username">
+                <input class="loginusername" type="text" placeholder="Username" name="username">
                 <br><br>
                 <input class="loginpassword" type="password" placeholder="Password" name="password">
                 <br><br>

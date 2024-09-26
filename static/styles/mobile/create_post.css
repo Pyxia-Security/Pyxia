@@ -1,0 +1,99 @@
+h1 {
+    text-align: center;
+}
+
+.create_post_container {
+    width: 100vw;
+    display: block;
+}
+
+.create_post_wrapper {
+    margin-left: .9vw;
+    margin-right: .9vw;
+    background-color: #704264;
+    border: solid black 2px;
+    border-radius: 10px;
+    margin-top: 2vh;
+    height: 100%;
+    display: flex;
+}
+
+.create_post_wrapper_2 {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2vh;
+    display: block;
+}
+
+input,
+select,
+textarea {
+    background-color: #DBAFA0;
+    border: solid black 2px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-input {
+    width: 80vw;
+    height: 5vh;
+    font-size: 2em;
+}
+
+textarea {
+    width: 80vw;
+    height: 15vh;
+    font-size: 2em;
+}
+
+select {
+    overflow: hidden;
+    width: 20vw;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.checkbox {
+    accent-color: #DBAFA0;
+    width: 10vw;
+    height: 4vh;
+}
+
+input::file-selector-button {
+    background-color: #DBAFA0;
+    border: none;
+}
+
+
+input::file-selector-button:hover {
+    background-color:#e4c3b8;
+}
+
+.form_container {
+    display: flex;
+}
+
+.center {
+    text-align: center;
+}
+
+.space {
+    padding-bottom: 1vh;
+}
+
+.file_upload {
+    width: 80vw;
+    height: 4vh;
+    font-size: 1.5em;
+}
+
+.submit {
+    width: 20vw;
+    height: 5vh;
+    font-size: 1.5em;
+}
+
+.darkplaceholder::placeholder {
+    color: black;
+}

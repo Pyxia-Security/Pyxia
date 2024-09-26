@@ -1,0 +1,67 @@
+.settings-container {
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    width: 75vw;
+    margin-top: 4vh;
+    margin-bottom: 4vh;
+    border: solid black 2px;
+    border-radius: 10px;
+    background-color: #344955;
+}
+
+.title {
+    text-align: center;
+    margin-top: 1vh;
+    font-size: 2em;
+}
+
+.option_title {
+    margin-left: 2vw;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.option {
+    display: flex;
+    height: 6vh;
+}
+
+.option_button {
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 4vw;
+    height: 4vh;
+    margin-left: 1vw;
+    background-color: #78A083;
+    border: solid black 2px;
+    border-radius: 10px;
+}
+
+.option_button_timer {
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 8vw;
+    height: 4vh;
+    margin-left: 1vw;
+    background-color: #78A083;
+    border: solid black 2px;
+    border-radius: 10px;
+}
+
+.log_off_timer,
+.post_per_page {
+    overflow: hidden;
+    width: 5vw;
+    font-size: 1em;
+    text-align: center;
+    background-color: #78A083;
+    border: solid black 2px;
+    border-radius: 10px;
+    margin-left: 1vw;
+}
+
+.option_timer {
+    display: flex;
+    height: 11vh;
+}

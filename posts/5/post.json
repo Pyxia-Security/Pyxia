@@ -3,13 +3,13 @@
     "bookmarked": null,
     "description": "admin' or '1'='1",
     "images": [
-        "C:\\Digi Project - Social Media\\Pyxia\\posts\\5\\post1.jpg"
+        "post1.jpg"
     ],
     "liked": null,
     "likes": null,
     "post_id": "5",
-    "privacy": null,
-    "title": "Oranges",
+    "privacy": "off",
+    "title": "Big Balls",
     "total_images": 1,
     "user": "BlueFloyd",
     "user_id": 15

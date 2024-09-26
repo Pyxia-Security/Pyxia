@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-nz" id="html">
     <head>
         <title>Pyxia | Sign Up</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
     </head>
@@ -11,7 +13,7 @@
             <form method="post" action="/signup">
                 <input class="loginemail center_div" type="email" placeholder="Email" name="email">
                 <br>
-                <input class="loginusername center_div" type="username" placeholder="Username" name="username">
+                <input class="loginusername center_div" type="text" placeholder="Username" name="username">
                 <br>
                 <input class="loginpassword center_div" type="password" placeholder="Password" name="password">
                 <br>

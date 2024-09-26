@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-nz" id="html">
+    <head>
+        <title>Pyxia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/pyxia.css') }}">
+    </head>
+    <body>
+        <h1 class="name">Pyxia</h1>
+        {% if current_user.is_authenticated == True %}
+            <h2 class="center">Welcome Back!</h2>
+        {% else %}
+            <div class="unauthed-container">
+                <h2 class="center desc">Welcome! How would you like to scroll today?</h2>
+                <div class="acc-view-options">
+                    <button onclick="login()" class="inline button-one">Login</button>
+                    <button onclick="signup()" class="inline button-one">Signup</button>
+                    <button onclick="a()" class="inline">Anonymous</button>
+                </div>
+            </div>
+        {% endif %}
+    </body>
+</html>

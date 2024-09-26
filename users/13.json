@@ -1,17 +1,33 @@
 {
     "age": "18",
-    "chat_rooms": [],
-    "conversation_with": [],
+    "chat_rooms": [
+        [
+            "7670814062309430908",
+            "NikoBellic and Seb"
+        ]
+    ],
+    "conversation_with": [
+        "2"
+    ],
     "custom_pfp": false,
     "description": "Hello World! Welcome to NikoBellic's Pyxia page!",
     "friends": [
-        "13"
+        "13",
+        "12"
     ],
-    "login_date": null,
+    "login_date": "2024-09-22 15:30:00",
     "logoff_time": 1,
     "pfp_type": false,
+    "requested": [],
+    "requests": [
+        "12"
+    ],
     "saved_posts": [],
-    "settings": [],
+    "settings": {
+        "dark_mode": false,
+        "post_per_page": 10,
+        "sidebar": true
+    },
     "user_id": "13",
     "username": "NikoBellic"
 }

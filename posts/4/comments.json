@@ -9,6 +9,11 @@
             "content": "Hello Again!",
             "user": "Seb",
             "user_id": 2
+        },
+        {
+            "content": "This website is working!",
+            "user": "Seb",
+            "user_id": 2
         }
     ]
 }

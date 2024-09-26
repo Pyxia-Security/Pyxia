@@ -1,0 +1,14 @@
+.post-description-text {
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.profile-link {
+    color: black;
+    text-decoration: none;
+}
+
+.pfp_upload_container {
+    margin-left: auto;
+    margin-right: auto;
+}

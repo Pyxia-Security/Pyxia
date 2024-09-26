@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 #Programmed and Developed by @OfficialJavaScript of Pyxia Security.
-from flask import Flask, render_template, redirect, request, session, abort, url_for
-import os, flask_login, shutil, json, datetime
+from flask import Flask, render_template, redirect, request, session, abort, url_for, send_from_directory
+import os, flask_login, shutil, json, datetime, argon2, ssl
 from flask_login import current_user
 from database import db, Mapped, mapped_column
 from decouple import config
 from lib.flask_recaptcha import ReCaptcha
-import argon2
 from pathlib import Path
 from post_creator import *
 from chat_creator import *
 from friend_system import *
+from notifications import *
+from search_system import *
+from settings import *
+from anonymous import *
 from user_agents import parse
 
 app = Flask(__name__)
@@ -25,7 +28,6 @@ recaptcha = ReCaptcha(app=app)
 db.init_app(app)
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-home_screen_posts = 10
 phash = argon2.PasswordHasher()
 
 class User(db.Model, flask_login.UserMixin):
@@ -43,16 +45,29 @@ def user_loader(user_id):
 
 @app.route("/", methods=['GET'])
 def index():
+    if current_user.is_authenticated == True:
+        return redirect('/pyxia')
     session['error'] = False
     session['already_exists'] = False
     session['robot'] = False
     get_user_agent()
-    #Note to self: Personal user id is added to the friends list so they can see their own posts, so remove when checking for friends in list (do something like friends[1] onwards, skipping friends[0] which = user_id).
-    return render_template("main.html", yes=session["device_type"])
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/main.html", yes=session["device_type"])
+    else:
+        return render_template("main.html", yes=session["device_type"]) 
 
 @app.route("/notifications", methods=['GET'])
 def notifications_page():
-    return render_template("notifications.html")
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    notifications = {   
+        "friend_requests": "",
+        "message_nudges": ""
+    }
+    friend_requests = check_friend_notifications(current_user.id)
+    notifications["friend_requests"] = friend_requests
+    theme = get_user_theme(current_user.id)
+    return render_template("notifications.html", notifications=notifications, dark_theme=theme)
 
 @app.route("/pyxia", methods=['GET'])
 def home():
@@ -61,7 +76,8 @@ def home():
     session['robot'] = False
     if current_user.is_authenticated == False:
             return redirect('/')
-    posts_list = load_posts(home_screen_posts, read_friends(current_user.id))
+    home_screen_posts = get_user_post_per_page(str(current_user.id))
+    posts_list = load_posts(home_screen_posts, read_friends(current_user.id), check_user_age(str(current_user.id)))
     post_info = {
         "posts": [
             
@@ -75,8 +91,17 @@ def home():
         info["liked"] = liked
         bookmarked = check_if_bookmarked(int(info["post_id"]), current_user.id)
         info["bookmarked"] = bookmarked
+        info["custom_pfp"] = add_user_profile_info(post)
+        print(info["custom_pfp"])
         post_info["posts"].append(info)
-    return render_template("index.html", posts=post_info)
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/index.html", posts=post_info, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("index.html", posts=post_info, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
         
 @app.route('/pyxia/posts/<id>', methods=['GET'])
 def posts_page(id):
@@ -86,7 +111,7 @@ def posts_page(id):
         post_id = int(id)
     except ValueError:
         return abort(404)
-    response = check_viewable(post_id, current_user.id)
+    response = check_viewable_w_agecheck(post_id, current_user.id, check_user_age(str(current_user.id)))
     if response == "error":
         return abort(404)
     elif response == "not_readable":
@@ -101,8 +126,16 @@ def posts_page(id):
         data["liked"] = liked
         bookmarked = check_if_bookmarked(post_id, current_user.id)
         data["bookmarked"] = bookmarked
+        data["custom_pfp"] = add_user_profile_info(post_id)
         comments = read_comments(post_id)
-        return render_template("posts.html", post=data, comments=comments["comments"])
+        theme = get_user_theme(current_user.id)
+        side_bar = get_side_bar(current_user.id)
+        pfp = get_pfp(current_user.id)
+        get_user_agent()
+        if session["device_type"].lower() == "mobile":
+            return render_template("mobile/posts.html", post=data, comments=comments["comments"], dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+        else:
+            return render_template("posts.html", post=data, comments=comments["comments"], dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
     else:
         return abort(403)
      
@@ -209,8 +242,15 @@ def change_pfp():
     if current_user.is_authenticated == False:
         return redirect('/')
     if request.method == "GET":
-        return render_template("change_pfp.html")
-    
+        theme = get_user_theme(current_user.id)
+        side_bar = get_side_bar(current_user.id)
+        pfp = get_pfp(current_user.id)
+        get_user_agent()
+        if session["device_type"].lower() == "mobile":
+            return render_template("mobile/change_pfp.html", dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+        else:
+            return render_template("change_pfp.html", dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+        
 @app.route('/pyxia/profile/change_pfp_post', methods=['POST'])
 def change_pfp_post():
     uploaded_file = request.files['file']
@@ -256,8 +296,18 @@ def user_profile(user_id):
         friend = True
     else:
         friend = False
+    requested = check_if_requested_woutadd(current_user.id, user_id)
+    print(requested)
     user_data = get_user_profile(clear_user_id)
-    return render_template("profile.html", user=user_data, friend=friend)
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(user_id)
+    user_pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/profile.html", user=user_data, friend=friend, requested=requested, dark_theme=theme, side_bar=side_bar, pfp=pfp, user_pfp=user_pfp)
+    else:
+        return render_template("profile.html", user=user_data, friend=friend, requested=requested, dark_theme=theme, side_bar=side_bar, pfp=pfp, user_pfp=user_pfp)
    
 @app.route('/filething', methods=['POST'])
 def file_thing():
@@ -277,12 +327,6 @@ def get_user_agent():
 @app.route("/test_mobile_and_pc")
 def tester_site():
     return render_template("tester2.html")
-
-@app.route("/a")
-def anonymous():
-    if current_user.is_authenticated == True:
-        return redirect('/')
-    return render_template("anonymous.html")
 
 def get_user(username):
     return db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none()
@@ -376,8 +420,8 @@ def signup():
     else:
         if recaptcha.verify():
             ages = ['16', '18']
-            email = request.form.get('email')
-            username = request.form.get('username')
+            email = request.form.get('email').replace(" ", "")
+            username = request.form.get('username').replace(" ", "")
             age = request.form.get('age')
             if age not in ages:
                 return redirect('signup')
@@ -414,6 +458,7 @@ def signup():
                 flask_login.login_user(user_for_login)
                 create_user_file(current_user.id, username, age)
                 set_login_time(current_user.id, False)
+                add_user_ttl(current_user.id, username)
                 return redirect('/pyxia')
         else:
             session['robot'] = True
@@ -428,32 +473,90 @@ def profile_page():
         image_data = get_image(user_data)
     else:
         image_data = None
-    return render_template("myprofile.html", user=user_data, pfp=image_data)
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/myprofile.html", user=user_data, pfp=image_data, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("myprofile.html", user=user_data, pfp=image_data, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
 
-@app.route('/pyxia/search', methods=['GET'])
+@app.route('/pyxia/search')
 def search():
     if current_user.is_authenticated == False:
         return redirect('/')
-    return render_template("search.html")
+    get_params = request.args.get("search-input")
+    type_param = request.args.get("type")
+    if get_params != None and get_params != "":
+        print("get_params: ", get_params)
+        print("\n\ntype_param: ", type_param)
+        if type_param == "posts":
+            data = search_for(get_params.lower(), str(current_user.id))
+        else:
+            data = search_for_user(get_params.lower().replace(" ", ""))
+    else:
+        data = ""
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/search.html", search_data=get_params, data=data, search_type=type_param, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("search.html", search_data=get_params, data=data, search_type=type_param, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
 
 @app.route('/pyxia/friends', methods=['GET'])
 def friends():
     if current_user.is_authenticated == False:
         return redirect('/')
     friends = set_user_names(current_user.id)
-    return render_template("friends.html", friends=friends)
+    print("friends: ", friends)
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/friends.html", friends=friends, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("friends.html", friends=friends, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
 
 @app.route('/pyxia/trending', methods=['GET'])
 def trending():
     if current_user.is_authenticated == False:
         return redirect('/')
-    return render_template("trending.html")
+    home_screen_posts = get_user_post_per_page(str(current_user.id))
+    posts_list = load_trending(home_screen_posts, current_user.id, check_user_age(str(current_user.id)))
+    post_info = {
+        "posts": [
+            
+        ]
+    }
+    for post in posts_list:
+        info = read_posts(post)
+        likes = read_likes(info["post_id"])
+        info["likes"] = likes
+        liked = check_if_liked(info["post_id"], current_user.id)
+        info["liked"] = liked
+        bookmarked = check_if_bookmarked(int(info["post_id"]), current_user.id)
+        info["bookmarked"] = bookmarked
+        info["custom_pfp"] = add_user_profile_info(post)
+        post_info["posts"].append(info)
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/trending.html", posts=post_info, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("trending.html", posts=post_info, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
 
 @app.route('/pyxia/clips', methods=['GET'])
 def clips():
     if current_user.is_authenticated == False:
         return redirect('/')
-    clips_list = load_clips(home_screen_posts, read_friends(current_user.id))
+    home_screen_posts = get_user_post_per_page(str(current_user.id))
+    clips_list = load_clips(home_screen_posts, read_friends(current_user.id), check_user_age(current_user.id))
     clips_info = {
         "clips": [
             
@@ -461,15 +564,27 @@ def clips():
     }
     for clip in clips_list:
         info = read_clips(clip)
+        clips_data = modify_for_clips_only(info["post_id"])
+        info["images"] = clips_data
+        total_images = read_total(info["post_id"])
+        info["total_images"] = total_images
         likes = read_likes(info["post_id"])
         info["likes"] = likes
         liked = check_if_liked(info["post_id"], current_user.id)
         info["liked"] = liked
         bookmarked = check_if_bookmarked(int(info["post_id"]), current_user.id)
         info["bookmarked"] = bookmarked
+        info["custom_pfp"] = add_user_profile_info(clip)
         clips_info["clips"].append(info)
-    return render_template("clips.html", clips=clips_info)
-
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/clips.html", post=clips_info, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("clips.html", post=clips_info, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    
 @app.route('/pyxia/create_post_proute', methods=['POST'])
 def create_post_backend():
     files = request.files.getlist("file")
@@ -496,14 +611,13 @@ def create_post_backend():
             elif file.filename.lower().endswith(('.mp4')):
                 file_type = ".mp4"
                 clips = True
-                clips_list.append(str(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}")))
             else:
                 post_path = Path(f"posts/{post_id}")
                 shutil.rmtree(post_path)
                 change_post_total_by_minus_one()
                 return('error')
             time_through += 1
-            file_list.append(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
+            file_list.append(f"post{time_through}{file_type}")
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
             mime = file_mime_type(os.path.join(app.config["UPLOAD_FOLDER"], f"{post_id}", f"post{time_through}{file_type}"))
             if mime not in mimes:
@@ -528,7 +642,14 @@ def create_post_backend():
 def create_post_page():
     if current_user.is_authenticated == False:
         return redirect('/')
-    return render_template("create_post.html")
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/create_post.html", dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("create_post.html", dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
     
 def check_if_exists(id):
     file = Path(f"users/{id}.json")
@@ -542,6 +663,8 @@ def create_user_file(user_id, username, age):
         "conversation_with": [],
         "custom_pfp": False,
         "pfp_type": False,
+        "requests": [],
+        "requested": [],
         "username": username,
         "user_id": user_id,
         "friends": [
@@ -553,23 +676,50 @@ def create_user_file(user_id, username, age):
             
         ],
         "description": f"Hello World! Welcome to {username}'s Pyxia page!",
-        "settings": [
-            
-        ]
+        "settings": {
+            "dark_mode": False,
+            "sidebar": True,
+            "post_per_page": 10
+        }
     }
     with open(f'users/{user_id}.json', 'w') as outfile:
         json.dump(data, outfile, sort_keys=True, indent=4)
     
+def add_user_ttl(user_id, user_name):
+    with open('users/users.json', 'r+') as pyxia_users:
+        users = json.load(pyxia_users)
+        users["users"].append([str(user_id), user_name])
+        pyxia_users.seek(0)
+        json.dump(users, pyxia_users, sort_keys=True, indent=4)
+        pyxia_users.truncate()
+    
 def get_image(user_data):
     data = url_for('static', filename=f'pfp/{ user_data["user_id"]}{ user_data["pfp_type"] }')
     return data
+
+@app.route('/pyxia/images/<post_id>/<filename>')
+def load_image(post_id, filename):
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    viewable = check_viewable(post_id, current_user.id)
+    if viewable == "not_readable" or viewable == "error":
+        return abort(404)
+    directory = f"posts/{post_id}"
+    return send_from_directory(directory, filename)
 
 @app.route("/pyxia/chat", methods=['GET'])
 def chat():
     if current_user.is_authenticated == False:
         return redirect('/')
     chats = read_user_chats(current_user.id)
-    return render_template("chathome.html", chats=chats)
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/chathome.html", chats=chats, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("chathome.html", chats=chats, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
 
 @app.route("/pyxia/chat/<chat_id>", methods=['GET'])
 def chat_viewer(chat_id):
@@ -586,7 +736,14 @@ def chat_viewer(chat_id):
     if canread != "can_read":
         return abort(401)
     chat_name = get_chat_name(id_for_chat)
-    return render_template("chatroom.html", chat_id=id_for_chat, chat_name=chat_name[0])
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/chatroom.html", chat_id=id_for_chat, chat_name=chat_name[0], dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("chatroom.html", chat_id=id_for_chat, chat_name=chat_name[0], dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
 
 @app.route("/pyxia/get_chat/<chat_id>")
 def get_chat(chat_id):
@@ -603,7 +760,8 @@ def get_chat(chat_id):
     if canread != "can_read":
         return abort(401)
     messages = read_messages(id_for_chat)
-    return render_template("chatroom_chat.html", messages=messages)
+    theme = get_user_theme(current_user.id)
+    return render_template("chatroom_chat.html", messages=messages, dark_theme=theme)
 
 @app.route('/pyxia/send_message/<chat_id>', methods=['POST'])
 def send_message(chat_id):
@@ -654,7 +812,7 @@ def check_auth_time():
         return "", 401
     time = get_login_time(current_user.id)
     user_time = get_user_defined_time(current_user.id)
-    if user_time == None:
+    if user_time == "off":
         return "DISABLE", 200
     current_time = datetime.datetime.now()
     data = current_time-time
@@ -698,6 +856,324 @@ def change_user_defined_time(user_id, time):
         json.dump(user_data, user, sort_keys=True, indent=4)
         user.trucate()
 
+@app.route('/pyxia/friends/requests/<friend_id>', methods=["POST"])
+def request_friend_route(friend_id):
+    if current_user.is_authenticated == False:
+        return "", 401
+    try:
+        int_friend_id = int(friend_id)
+    except ValueError:
+        return "", 404
+    exists = check_if_user_exists(int_friend_id)
+    if exists == "none":
+        return "", 404
+    friends = check_if_friends(str(current_user.id), str(int_friend_id))
+    if friends == True:
+        return "", 401
+    already_requested = check_if_already_requested(str(current_user.id), str(int_friend_id))
+    if already_requested == True:
+        return "", 409
+    elif already_requested == "modified":
+        return "", 202
+    request_friend(str(current_user.id), str(int_friend_id))
+    return redirect(f'/pyxia/profile/{friend_id}')
+
+@app.route('/pyxia/friends/accept/<friend_id>', methods=['POST'])
+def accept_friend_route(friend_id):
+    if current_user.is_authenticated == False:
+        return "", 401
+    try:
+        int_friend_id = int(friend_id)
+    except ValueError:
+        return "", 404
+    exists = check_if_user_exists(int_friend_id)
+    print(exists)
+    if exists == "none":
+        return "", 404
+    friends = check_if_friends(str(current_user.id), str(int_friend_id))
+    print(friends)
+    if friends == True:
+        return "", 401
+    requested = check_if_requested(str(current_user.id), str(int_friend_id))
+    print(requested)
+    if requested == "not_requested":
+        return "", 404
+    accept_friend_request(str(current_user.id), str(int_friend_id))
+    return redirect('/pyxia/friends')
+
+@app.route('/pyxia/friends/reject/<friend_id>', methods=['POST'])
+def reject_friend_route(friend_id):
+    if current_user.is_authenticated == False:
+        return "", 401
+    try:
+        int_friend_id = int(friend_id)
+    except ValueError:
+        return "", 404
+    exists = check_if_user_exists(int_friend_id)
+    if exists == "none":
+        return "", 404
+    friends = check_if_friends(str(current_user.id), str(int_friend_id))
+    if friends == True:
+        return "", 401
+    requested = check_if_requested(str(current_user.id), str(int_friend_id))
+    if requested == "not_requested":
+        return "", 404
+    deny_friend_request(str(current_user.id), str(int_friend_id))
+    return redirect('/pyxia/friends')
+
+@app.route('/pyxia/friends/remove/<friend_id>', methods=['POST'])
+def remove_friend_route(friend_id):
+    if current_user.is_authenticated == False:
+        return "", 401
+    try:
+        int_friend_id = int(friend_id)
+    except ValueError:
+        return "", 404
+    exists = check_if_user_exists(int_friend_id)
+    if exists == "none":
+        return "", 404
+    friends = check_if_friends(str(current_user.id), str(int_friend_id))
+    if friends == False:
+        return "", 401
+    remove_friend(str(current_user.id), str(int_friend_id))
+    return redirect('/pyxia/friends')
+
+@app.route('/pyxia/friends/unrequest/<friend_id>', methods=['POST']) 
+def unrequest(friend_id):
+    if current_user.is_authenticated == False:
+        return "", 401
+    try:
+        int_friend_id = int(friend_id)
+    except ValueError:
+        return "", 404
+    exists = check_if_user_exists(int_friend_id)
+    if exists == "none":
+        return "", 404
+    requested = check_if_requested_woutadd(current_user.id, friend_id)
+    if requested == False:
+        return "", 404
+    unsend_friend_request(str(current_user.id), str(friend_id))
+    return redirect(f'/pyxia/profile/{friend_id}')
+    
+
+@app.route('/pyxia/friends/requests')
+def friendrequestspage():
+    if current_user.is_authenticated == False:
+        return redirect("/")
+    requests = read_requests(current_user.id)
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/friend_requests.html", requests=requests, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("friend_requests.html", requests=requests, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+
+@app.route('/pyxia/attribution')
+def attribution():
+    if current_user.is_authenticated == False:
+        return redirect("/")
+    theme = get_user_theme(current_user.id)
+    return render_template("attribution.html", dark_theme=theme)
+
+@app.route('/pyxia/bookmarks')
+def bookmarks_page():
+    if current_user.is_authenticated == False:
+        return redirect("/")
+    bookmarks = get_bookmarked_posts(str(current_user.id))
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/bookmarks.html", bookmarks=bookmarks, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("bookmarks.html", bookmarks=bookmarks, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+
+@app.route('/pyxia/settings')
+def settings():
+    if current_user.is_authenticated == False:
+        return redirect('/')
+    user_settings = get_user_settings(str(current_user.id))
+    theme = get_user_theme(current_user.id)
+    side_bar = get_side_bar(current_user.id)
+    pfp = get_pfp(current_user.id)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/settings.html", settings=user_settings, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+    else:
+        return render_template("settings.html", settings=user_settings, dark_theme=theme, side_bar=side_bar, profile_pfp=pfp)
+
+@app.route('/pyxia/settings/dark_mode', methods=['POST'])
+def dark_mode():
+    if current_user.is_authenticated == False:
+        return "", 401
+    change_dark_mode(str(current_user.id))
+    return redirect("/pyxia/settings")
+    
+@app.route('/pyxia/settings/sidebar', methods=['POST'])
+def sidebar_option():
+    if current_user.is_authenticated == False:
+        return "", 401
+    change_sidebar(str(current_user.id))
+    return redirect("/pyxia/settings")
+    
+@app.route('/pyxia/settings/post_per_page', methods=['POST'])
+def post_per_page():
+    if current_user.is_authenticated == False:
+        return "", 401
+    options = [10, 20, 30]
+    choice = request.form.get('post_per_page')
+    try:
+        choice_int = int(choice)
+    except ValueError:
+        return "", 404
+    if choice_int not in options:
+        return "", 404
+    change_post_per_page(str(current_user.id), choice_int)
+    return redirect('/pyxia/settings')
+    
+@app.route('/pyxia/settings/log_off', methods=['POST'])
+def log_off():
+    if current_user.is_authenticated == False:
+        return "", 401
+    options = [1, 2, 3, "off"]
+    choice = request.form.get('log_off')
+    if choice == "off":
+        choice_int = "off"
+    else:
+        try:
+            choice_int = int(choice)
+        except ValueError:
+            return "", 404
+    if choice_int not in options:
+        return "", 404
+    change_log_off(str(current_user.id), choice_int)
+    return redirect('/pyxia/settings')
+
+@app.route("/a")
+def anonymous():
+    if current_user.is_authenticated == True:
+        return redirect('/')
+    posts_list = anonymous_load_posts()
+    post_info = {
+        "posts": [
+            
+        ]
+    }
+    for post in posts_list:
+        info = read_posts(post)
+        info["custom_pfp"] = add_user_profile_info(post)
+        post_info["posts"].append(info)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/anonymous/anonymous.html", posts=post_info)
+    else:
+        return render_template("anonymous/anonymous.html", posts=post_info)
+
+@app.route("/a/clips")
+def anonymous_clips():
+    if current_user.is_authenticated == True:
+        return redirect('/')
+    clips_list = anonymous_load_clips()
+    clips_info = {
+        "clips": [
+            
+        ]
+    }
+    for clip in clips_list:
+        info = read_clips(clip)
+        clips_data = modify_for_clips_only(info["post_id"])
+        info["images"] = clips_data
+        total_images = read_total(info["post_id"])
+        info["total_images"] = total_images
+        info["custom_pfp"] = add_user_profile_info(clip)
+        clips_info["clips"].append(info)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/anonymous/clips.html", post=clips_info)
+    else:
+        return render_template("anonymous/clips.html", post=clips_info)
+
+@app.route("/a/trending")
+def anonymous_trending():
+    if current_user.is_authenticated == True:
+        return redirect("/")
+    posts_list = anonymous_load_trending()
+    post_info = {
+        "posts": [
+            
+        ]
+    }
+    for post in posts_list:
+        info = read_posts(post)
+        info["custom_pfp"] = add_user_profile_info(post)
+        post_info["posts"].append(info)
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/anonymous/trending.html", posts=post_info)
+    else:
+        return render_template("anonymous/trending.html", posts=post_info)
+
+@app.route("/a/posts/<id>")
+def anonymous_posts_page(id):
+    if current_user.is_authenticated == True:
+        return redirect('/')
+    try:
+        post_id = int(id)
+    except ValueError:
+        return abort(404)
+    response = anonymous_check_viewable(post_id)
+    if response == "error":
+        return abort(404)
+    elif response == "not_readable":
+        return abort(403)
+    elif response == "readable":
+        data = read_posts(post_id)
+        if data == "error":
+            return abort(404)
+        print(data)
+        profile_picture = add_user_profile_info(str(post_id))
+        get_user_agent()
+        if session["device_type"].lower() == "mobile":
+            return render_template("mobile/anonymous/posts.html", post=data, pfp=profile_picture)
+        else:
+            return render_template("anonymous/posts.html", post=data, pfp=profile_picture)
+    else:
+        return abort(403)
+    
+@app.route('/a/search')
+def anonymous_search():
+    if current_user.is_authenticated == True:
+        return redirect('/')
+    get_params = request.args.get("search-input")
+    if get_params != None and get_params != "":
+        data = anonymous_search_for(get_params.lower())
+    else:
+        data = ""
+    get_user_agent()
+    if session["device_type"].lower() == "mobile":
+        return render_template("mobile/anonymous/search.html", search_data=get_params, data=data)
+    else:
+        return render_template("anonymous/search.html", search_data=get_params, data=data)
+    
+@app.route("/a/attribution")
+def anonymous_attribution():
+    if current_user.is_authenticated == True:
+        return redirect('/')
+    return render_template("anonymous/attribution.html")
+
+@app.route('/a/images/<post_id>/<filename>')
+def a_load_image(post_id, filename):
+    if current_user.is_authenticated == True:
+        return redirect('/')
+    viewable = anonymous_check_viewable(post_id)
+    if viewable == "not_readable" or viewable == "error":
+        return abort(404)
+    directory = f"posts/{post_id}"
+    return send_from_directory(directory, filename)
+
 @login_manager.unauthorized_handler
 def login_unauthorized_handler():
     return render_template("error/401.html"), 401
@@ -732,5 +1208,7 @@ def teapoteasteregg():
 
 if __name__ == "__main__":
     context = ('server.crt', 'server.key')
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER) 
+    ssl_context.load_cert_chain('server.crt', 'server.key')
     # deepcode ignore RunWithDebugTrue: disable debug in final version, as is currently used for testing/debugging purposes.
-    app.run(host='0.0.0.0', port=80, debug=True, ssl_context=context)
+    app.run(host='0.0.0.0', port=443, debug=True, ssl_context=context)

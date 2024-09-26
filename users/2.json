@@ -20,28 +20,47 @@
         [
             "3352877109875949907",
             "Seb and Doggington"
+        ],
+        [
+            "7670814062309430908",
+            "NikoBellic and Seb"
+        ],
+        [
+            "7430374372327166468",
+            "MRPRESIDENT and Seb"
         ]
     ],
     "conversation_with": [
         "1",
         "15",
-        "8"
+        "8",
+        "13",
+        "17"
     ],
     "custom_pfp": true,
-    "description": "Hello World! Welcome my Pyxia page! I am the developer and CEO of Pyxia-Security.",
+    "description": "Hello World! Welcome my Pyxia page! I am the developer and CEO of Pyxia-Security.\r\n\r\nYou like ability to edit this! Mobile works too!",
     "friends": [
         "2",
-        "1",
         "15",
-        "8"
+        "8",
+        "17",
+        "12"
     ],
-    "login_date": "2024-09-26 22:04:00",
+    "login_date": "2024-09-26 23:37:00",
     "logoff_time": 1,
     "pfp_type": ".jpg",
+    "requested": [],
+    "requests": [],
     "saved_posts": [
-        3
+        8,
+        1,
+        18
     ],
-    "settings": [],
+    "settings": {
+        "dark_mode": false,
+        "post_per_page": 10,
+        "sidebar": true
+    },
     "user_id": "2",
     "username": "Seb"
 }

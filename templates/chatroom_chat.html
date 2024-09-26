@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-nz">
     <head>
         <title>Chat return</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/chatroomext.css') }}">
+        {% if dark_theme == True %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/dark_mode_css/chatroomext.css') }}">
+        {% else %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/chatroomext.css') }}">
+        {% endif %}
     </head>
     <body id="site">
         <div class="chat_inner_container">

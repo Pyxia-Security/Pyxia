@@ -5,3 +5,7 @@ function login() {
 function a() {
     location.href = "/a"
 }
+
+function signup() {
+    location.href = "/signup"
+}

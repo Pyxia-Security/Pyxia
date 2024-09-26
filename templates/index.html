@@ -4,24 +4,48 @@
         <title>Main | Pyxia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
-        <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+        {% if side_bar == False %}
+            <script src="{{ url_for('static', filename='scripts/main_darkmode.js') }}"></script>
+        {% else %}
+            <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        {% endif %}
+        {% if dark_theme == True %}
+            {% if side_bar == True %}
+                <link rel="stylesheet" href="{{ url_for('static', filename='styles/dark_mode_css/index.css') }}">
+            {% else %}
+                <link rel="stylesheet" href="{{ url_for('static', filename='styles/dark_mode_css/index_no_sidebar.css') }}">
+            {% endif %}
+        {% else %}
+            {% if side_bar == True %}
+                <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+            {% else %}
+                <link rel="stylesheet" href="{{ url_for('static', filename='styles/index_no_sidebar.css') }}">
+            {% endif %}
+        {% endif %}
     </head>
     <body>
         <header>
-            <img id="exit_address" style="position: absolute;" src="{{ url_for('static', filename='images/exit.png') }}" width="0px" height="0px">
-            <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px">
+            <img id="exit_address" style="position: absolute;" src="{{ url_for('static', filename='images/exit.png') }}" width="0px" height="0px" alt="exit">
+            <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px" alt="menu">
             <div class="header-container">
-                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="{{ url_for('static', filename='images/exit.png') }}" id="opencloseImage" class="nav-icons"></button>
-                <button class="account-button" onclick="profile()"><p class="profile-user-name">{{ current_user.username }}</p><img class="profile-picture" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" class="nav-icons"></button>
-                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/notification.png') }}" class="nav-icons"></button>
-                <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons"></button> 
-                <button class="add_post" onclick="add_post()"><img width="50vw" src="{{ url_for('static', filename='images/add_post.png') }}" class="nav-icons"></button> 
+                {% if side_bar == True %}
+                    <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="{{ url_for('static', filename='images/exit.png') }}" id="opencloseImage" class="nav-icons" alt="exit"></button>
+                {% else %}
+                    <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="{{ url_for('static', filename='images/menu.png') }}" id="opencloseImage" class="nav-icons" alt="menu"></button>
+                {% endif %}                
+                {% if profile_pfp[0] == True %}
+                    <button class="account-button" onclick="profile()"><strong class="profile-user-name">{{ current_user.username }}</strong><img class="profile-picture nav-icons" height="45vh" src="{{ url_for('static', filename=profile_pfp[1]) }}" alt="profile"></button>
+                {% else %}
+                    <button class="account-button" onclick="profile()"><strong class="profile-user-name">{{ current_user.username }}</strong><img class="profile-picture nav-icons" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" alt="profile"></button>
+                {% endif %}
+                <button class="notification" onclick="notificationopenMenu()"><img width="50vw" src="{{ url_for('static', filename='images/notification.png') }}" class="nav-icons" alt="notification"></button>
+                <button class="search" onclick="search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="nav-icons" alt="search"></button> 
+                <button class="add_post" onclick="add_post()"><img width="50vw" src="{{ url_for('static', filename='images/add_post.png') }}" class="nav-icons" alt="add_post"></button> 
             </div>
         </header>
         <div id="notification-overlay">
             <div class="notification-overlay">
-                <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="{{ url_for('static', filename='images/exit.png') }}"></button>
+                <button class="notification-close" id="notificationcloseMenu" onclick="notificationcloseMenu()"><img width="50vw" src="{{ url_for('static', filename='images/exit.png') }}" alt="exit"></button>
                 <iframe class="iframe-notification-overlay" src="/notifications"></iframe>
             </div>
         </div>
@@ -30,7 +54,7 @@
                 <div class="share_top">
                     <h2 class="share_top_text">Share</h2>
                     <button id="share_top_post" onclick="close_share()">
-                        <img class="close-post-comment-image" src="{{ url_for('static', filename='images/exit.png') }}" height="100%">
+                        <img class="close-post-comment-image" src="{{ url_for('static', filename='images/exit.png') }}" height="100%" alt="exit">
                     </button>
                 </div>
                 <div class="share_text_main">
@@ -46,20 +70,23 @@
         <div class="container">
             <div class="side-bar" id="sidebar-container">
                 <div class="sidebar-button-div" id="sidebar">
-                    <button class="sidebar-button" onclick="home()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/home.png') }}" width="50vw">
-                            <p class="sidebar-button-text">Home</p>
+                    <button class="sidebar-button" onclick="home()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/home.png') }}" width="50vw" alt="home">
+                        <strong class="sidebar-button-text">Home</strong>
                     </button>
-                    <button class="sidebar-button" onclick="friends()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/friends.png') }}" width="50vw">
-                        <p class="sidebar-button-text">Friends</p>
+                    <button class="sidebar-button" onclick="friends()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/friends.png') }}" width="50vw" alt="friends">
+                        <strong class="sidebar-button-text">Friends</strong>
                     </button>
-                    <button class="sidebar-button" onclick="trending()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/trending.png') }}" width="50vw">
-                        <p class="sidebar-button-text">Trending</p>
+                    <button class="sidebar-button" onclick="trending()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/trending.png') }}" width="50vw" alt="trending">
+                        <strong class="sidebar-button-text">Trending</strong>
                     </button>
-                    <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw">
-                        <p class="sidebar-button-text">Clips</p>
+                    <button class="sidebar-button" onclick="clips()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw" alt="clips">
+                        <strong class="sidebar-button-text">Clips</strong>
                     </button>
-                    <button class="sidebar-button" onclick="messages()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw">
-                        <p class="sidebar-button-text">Messages</p>
+                    <button class="sidebar-button" onclick="messages()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw" alt="chat">
+                        <strong class="sidebar-button-text">Messages</strong>
+                    </button>
+                    <button class="sidebar-button" onclick="savedposts()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/bookmark.png') }}" width="50vw" alt="bookmark">
+                        <strong class="sidebar-button-text">Bookmarks</strong>
                     </button>
                 </div>
             </div>
@@ -70,15 +97,53 @@
                             <div class="posts">
                                 <div class="post">
                                     <div class="post-user-account">
-                                        <img class="post-username-image" height="75vh" src="{{ url_for('static', filename='images/profile.png') }}">
-                                        <h2 class="post-username-text">{{ post["user"] }}</h2>
+                                        {% if post["custom_pfp"][0] == True %}
+                                            <img class="post-username-image custom_pfp" height="75vh" width="75vh" src="{{ url_for('static', filename=post['custom_pfp'][1]) }}" alt="postprofile">
+                                        {% else %}
+                                            <img class="post-username-image" height="75vh" src="{{ url_for('static', filename='images/profile.png') }}" alt="postprofile">
+                                        {% endif %}
+                                        <a class="post-username-text" href="/pyxia/profile/{{ post['user_id'] }}"><h2>{{ post["user"] }}</h2></a>
                                     </div>
                                     <div class="post-title">
-                                        <a href="pyxia/posts/{{ post['post_id'] }}" class="post-title-link"><h2>{{ post["title"] }}</h1></a>
+                                        <a href="/pyxia/posts/{{ post['post_id'] }}" class="post-title-link"><h2>{{ post["title"] }}</h2></a>
                                     </div>
-                                    <div class="post-image-container">
-                                        <img height="auto" class="post-image" src="{{ url_for('static', filename='images/testpost.png') }}">
-                                    </div>
+                                    {% if post["images"] != None %}
+                                        <div class="post-image-container">
+                                            {% if post['total_images'] > 1 %}
+                                                <button onclick="image_left({{ post['post_id'] }})" class="left-option"><img src="{{ url_for('static', filename='images/left.png') }}" height="50vh" alt="leftimage"></button>
+                                                <button onclick="image_right({{ post['post_id'] }})" class="right-option"><img src="{{ url_for('static', filename='images/right.png') }}" height="50vh" alt="rightimage"></button>
+                                            {% endif %}
+                                            <img class="variable_images" id="{{ post['post_id'] }}_total_image" name="{{ post['total_images'] }}">
+                                            <img class="variable_images" id="{{ post['post_id'] }}_start_image" name="1">
+                                            {% for image in post["images"] %}
+                                                {% if '.mp4' in image %}
+                                                    {% if loop.index > 1 %}
+                                                        <div name="{{ loop.index }}" class="post-image-hidden" id="{{ post['post_id'] }}_{{ loop.index }}">
+                                                            <video height="100%" controls id="post_image_{{ post['post_id'] }}_{{ loop.index }}" class="post-image-hidden" >
+                                                                <source src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][loop.index - 1]) }}" type="video/mp4">
+                                                            </video>
+                                                        </div>
+                                                    {% else %}
+                                                        <div name="{{ loop.index }}" class="container_thingy" id="{{ post['post_id'] }}_container_thingy">
+                                                            <video height="100%" controls id="post_image_{{ post['post_id'] }}_{{ loop.index }}" class="post-image">
+                                                                <source src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][loop.index - 1]) }}" type="video/mp4">
+                                                            </video>
+                                                        </div>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if loop.index > 1 %}
+                                                        <div name="{{ loop.index }}" class="post-image-hidden" id="{{ post['post_id'] }}_{{ loop.index }}">
+                                                            <img id="post_image_{{ post['post_id'] }}_{{ loop.index }}" class="post-image-hidden" src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][0]) }}" alt="image">
+                                                        </div>
+                                                    {% else %}
+                                                        <div name="{{ loop.index }}" class="container_thingy" id="{{ post['post_id'] }}_container_thingy">
+                                                            <img id="post_image_{{ post['post_id'] }}_{{ loop.index }}" height="auto" class="post-image" src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][0]) }}" alt="image">
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                     <div class="post-description">
                                         <div class="post-description-container">
                                             <p>{{ post["description"] }}</p>
@@ -86,24 +151,27 @@
                                     </div>
                                     <div class="post-interaction">
                                         {% if post["liked"] == "liked" %}
-                                            <button id="like_button_{{post['post_id']}}" onclick="unlike_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/liked.png') }}"></button>
+                                            <button id="like_button_{{post['post_id']}}" onclick="unlike_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/liked.png') }}" alt="liked"></button>
                                         {% else %}
-                                            <button id="like_button_{{post['post_id']}}" onclick="like_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/like.png') }}"></button>
+                                            <button id="like_button_{{post['post_id']}}" onclick="like_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/like.png') }}" alt="like"></button>
                                         {% endif %}
                                         <h2 id="post_likes_{{post['post_id']}}" class="post-interact-likes">{{ post["likes"] }}</h2>
                                         {% if post["bookmarked"] == "bookmarked" %}
-                                            <button id="bookmark_button_{{post['post_id']}}" onclick="unsave_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmarked.png') }}"></button>
+                                            <button id="bookmark_button_{{post['post_id']}}" onclick="unsave_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmarked.png') }}" alt="bookmarked"></button>
                                         {% else %}
-                                            <button id="bookmark_button_{{post['post_id']}}" onclick="save_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}"></button>
+                                            <button id="bookmark_button_{{post['post_id']}}" onclick="save_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}" alt="bookmark"></button>
                                         {% endif %}
-                                        <button onclick="open_share({{post['post_id']}})" class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}"></button>
+                                        <button onclick="open_share({{post['post_id']}})" class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}" alt="share"></button>
                                     </div>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
-            </div>            
+            </div>         
         </div>
+        <div>
+            <a class="attribution" href="/pyxia/attribution"><h2>Attribution</h2></a>
+        </div>   
     </body>
 </html>

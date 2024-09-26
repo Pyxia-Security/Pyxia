@@ -1,0 +1,19 @@
+{
+    "age_rating": "16",
+    "bookmarked": null,
+    "clips": true,
+    "clips_list": [],
+    "description": "Yes there are some funny videos.",
+    "images": [
+        "post1.mp4",
+        "post2.mp4"
+    ],
+    "liked": null,
+    "likes": null,
+    "post_id": "20",
+    "privacy": null,
+    "title": "Some funny videos",
+    "total_images": 2,
+    "user": "Seb",
+    "user_id": 2
+}

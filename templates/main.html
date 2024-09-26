@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-nz" id="html">
     <head>
         <title>Pyxia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
         <script src="{{ url_for('static', filename='scripts/home.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/pyxia.css') }}">
@@ -16,6 +18,7 @@
                 <h2 class="center">Welcome! How would you like to scroll today?</h2>
                 <div class="acc-view-options">
                     <button onclick="login()" class="inline button-one">Login</button>
+                    <button onclick="signup()" class="inline button-one">Signup</button>
                     <button onclick="a()" class="inline">Anonymous</button>
                 </div>
             </div>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en-nz">
+    <head>
+        <title>{{ chat_name }} | Pyxia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        {% if dark_theme == True %}
+            <script src="{{ url_for('static', filename='scripts/main_mobile_darkmode.js') }}"></script>
+        {% else %}
+            <script src="{{ url_for('static', filename='scripts/main_mobile.js') }}"></script>
+        {% endif %}
+        <script src="{{ url_for('static', filename='scripts/chatroom.js') }}"></script>
+        {% if dark_theme == True %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/dark_mode_css/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/mobile.css')  }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/dark_mode_css/chatroom.css') }}">
+        {% else %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/mobile.css')  }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/chatroom.css') }}">
+        {% endif %}
+    </head>
+    <body>
+        <header>
+            <img id="exit_address" style="position: absolute;" src="{{ url_for('static', filename='images/exit.png') }}" width="0px" height="0px" alt="exit">
+            <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px" alt="">
+            <div class="header-container">
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="{{ url_for('static', filename='images/menu.png') }}" id="opencloseImage" alt="menu"></button>
+                <h1 class="menu-name">Pyxia</h1>
+                {% if profile_pfp[0] == True %}
+                    <button class="account-button" onclick="profile()"><img class="profile-picture nav-icons" height="55vh" width="60vh" src="{{ url_for('static', filename=profile_pfp[1]) }}" alt="pfp"></button>
+                {% else %}
+                    <button class="account-button" onclick="profile()"><img class="profile-picture nav-icons" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" alt="pfp"></button>
+                {% endif %}
+            </div>
+        </header>
+        <div class="side-bar" id="sidebar-container">
+            <div class="top-buttons-container">
+                <div class="top-buttons">
+                    <button class="menu-search" onclick="add_post()"><img width="60vw" src="{{ url_for('static', filename='images/add_post.png') }}" alt="add_post"></button>
+                    <button class="menu-search" onclick="search()"><img width="60vw" src="{{ url_for('static', filename='images/search.png') }}" alt="search"></button>
+                    <button class="menu-notification" onclick="notification()"><img width="60vw" src="{{ url_for('static', filename='images/notification.png') }}" alt="notification"></button>
+                </div>
+            </div>
+            <div class="sidebar-button-div">
+                <button class="sidebar-button" onclick="home()">
+                    <div class="inner-button-container">
+                        <img class="sidebar-button-image" src="{{ url_for('static', filename='images/home.png') }}" width="50vw" alt="home">
+                        <strong class="sidebar-button-text">Home</strong>
+                    </div>
+                </button>
+            </div>
+            <div class="side_bar_button_container" id="side_bar">
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="friends()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/friends.png') }}" width="50vw" alt="friends">
+                            <strong class="sidebar-button-text">Friends</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="trending()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/trending.png') }}" width="50vw" alt="trending">
+                            <strong class="sidebar-button-text">Trending</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="clips()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw" alt="clips">
+                            <strong class="sidebar-button-text">Clips</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="messages()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw" alt="chat">
+                            <strong class="sidebar-button-text">Messages</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="savedposts()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/bookmark.png') }}" width="50vw" alt="bookmark">
+                            <strong class="sidebar-button-text">Bookmarks</strong>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="chats_container">
+                <h1 class="chat_name">{{ chat_name }}</h1>
+                <div class="chat_inner_container">
+                    <iframe id="chat_iframe" src="/pyxia/get_chat/{{ chat_id }}"></iframe>
+                    <iframe id="chat_iframe2" src="/pyxia/get_chat/{{ chat_id }}"></iframe>
+                    <div class="chat_options">
+                        <div class="chat_wrapper">
+                            <button onclick="disable_load()">Disable Chat Load (to help read messages - reload page to start again.)</button>
+                        </div>
+                    </div>
+                    <div class="text_chat_container">
+                        <textarea id="message" name="message" maxlength="200"></textarea>
+                        <input type="hidden" value="{{ chat_id }}" id="chat_id_value">
+                    </div>
+                    <br>
+                    <div class="submit_chat_container">
+                        <input onclick="send_message()" class="submit" type="submit">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

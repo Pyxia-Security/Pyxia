@@ -36,6 +36,10 @@ function notificationopenMenu() {
     document.getElementById("html").style.overflow = "hidden";
 }
 
+function notification() {
+    location.href = "/notifications"
+}
+
 function profile() {
     location.href = "/pyxia/profile";
 };
@@ -162,13 +166,55 @@ var check_alive = window.setInterval(function() {
 }, 60000)
 
 function kill_check_alive() {
-    clearInterval(check_alive)
+    clearInterval(check_alive);
 }
 
 function add_post() {
-    location.href = "/pyxia/create_post"
+    location.href = "/pyxia/create_post";
 }
 
 function messages() {
-    location.href = "/pyxia/chat"
+    location.href = "/pyxia/chat";
+}
+
+function image_left(img_post_id) {
+    var start_image_element = document.getElementById(img_post_id + "_start_image");
+    var start_images = start_image_element.getAttribute("name");
+    var current_div = document.getElementById(img_post_id + "_container_thingy");
+    var current_div_id = current_div.getAttribute("name");
+    if (current_div_id != start_images) {
+        var current_div_id_int = parseInt(current_div_id)
+        var change_to = current_div_id_int - 1
+        document.getElementById("post_image_" + img_post_id + "_" + current_div_id).className = "post-image-hidden post-image-video";
+        current_div.className = "post-image-hidden";
+        current_div.id = img_post_id + "_" + current_div_id;
+        document.getElementById(img_post_id + "_" + change_to).className = "container_thingy";
+        document.getElementById("post_image_" + img_post_id + "_" + change_to).className = "post-image post-image-video";
+        document.getElementById(img_post_id + "_" + change_to).id = img_post_id + "_container_thingy";
+    }
+}
+
+function image_right(img_post_id) {
+    var total_image_element = document.getElementById(img_post_id + "_total_image");
+    var total_images = total_image_element.getAttribute("name");
+    var current_div = document.getElementById(img_post_id + "_container_thingy");
+    var current_div_id = current_div.getAttribute("name");  
+    if (current_div_id != total_images) {
+        var current_div_id_int = parseInt(current_div_id)
+        var change_to = current_div_id_int + 1
+        document.getElementById("post_image_" + img_post_id + "_" + current_div_id).className = "post-image-hidden post-image-video";
+        current_div.className = "post-image-hidden post-image-video";
+        current_div.id = img_post_id + "_" + current_div_id;
+        document.getElementById(img_post_id + "_" + change_to).className = "container_thingy";
+        document.getElementById("post_image_" + img_post_id + "_" + change_to).className = "post-image post-image-video";
+        document.getElementById(img_post_id + "_" + change_to).id = img_post_id + "_container_thingy";
+    }
+}
+
+function savedposts() {
+    location.href = '/pyxia/bookmarks';
+}
+
+function settings() {
+    location.href = '/pyxia/settings';
 }

@@ -13,15 +13,25 @@
     "description": "there are no account settings\r\n",
     "friends": [
         "12",
-        "15"
+        "15",
+        "2",
+        "13"
     ],
     "login_date": null,
-    "logoff_time": 1,
-    "pfp_type": ".jpg",
+    "logoff_time": "off",
+    "pfp_type": ".png",
+    "requested": [
+        "13"
+    ],
+    "requests": [],
     "saved_posts": [
         1
     ],
-    "settings": [],
+    "settings": {
+        "dark_mode": false,
+        "post_per_page": 30,
+        "sidebar": false
+    },
     "user_id": "12",
     "username": "Emi"
 }

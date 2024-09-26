@@ -4,8 +4,13 @@
         <title>Notification | Pyxia</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8"> 
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/notification.css') }}">
+        {% if dark_theme == True %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/dark_mode_css/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/dark_mode_css/notification.css') }}">
+        {% else %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/notification.css') }}">
+        {% endif %}
     </head>
     <body>
         <div class="notification-container">
@@ -14,14 +19,12 @@
             </div> 
             <div class="notification-inner">
                 <div class="notification-inner-container">
-                    <div class="notification-box">
-                        <h3 class="notification-name">You have 1 new friend request.</h3>
-                        <button class="notification-button"><img height="70%" src="{{ url_for('static', filename='images/exit.png') }}"></button>
-                    </div>
-                    <div class="notification-box">
-                        <h3 class="notification-name">You have 1 new message.</h3>
-                        <button class="notification-button"><img height="70%" src="{{ url_for('static', filename='images/exit.png') }}"></button>
-                    </div>
+                    {% if notifications["friend_requests"] != 0 %}
+                        <div class="notification-box">
+                            <a class="link notification-name" href="/pyxia/friends/requests" target="_top"><h3>You have {{ notifications["friend_requests"] }} new friend request.</h3></a>
+                            <button class="notification-button"><img height="70%" src="{{ url_for('static', filename='images/exit.png') }}" alt="exit"></button>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -63,7 +63,40 @@
 }
 
 .fc-unfriend-button {
+    position: 3;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+}
+
+.fc-friend-button {
+    position: 2;
     margin-left: auto;
     background-color: rgba(0, 0, 0, 0);
     border: none;
+}
+
+form {
+    display: flex;
+}
+
+.unfriend_center {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.no_request {
+    margin-left: 2vw;
+}
+
+.requests-text {
+    position: absolute;
+    font-size: 1.30em;
+    margin-top: .75vh;
+    margin-left: .75vw;
+    color: black;
+    text-decoration: none;
+}
+
+.bookmark {
+    margin-left: 1vw;
 }

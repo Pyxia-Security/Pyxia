@@ -58,3 +58,8 @@
     position: absolute;
     margin-left: 93vw;
 }
+
+.link {
+    color: black;
+    text-decoration: none;
+}

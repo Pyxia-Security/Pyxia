@@ -19,6 +19,9 @@ html {
     width: auto;
     margin-left: 1vw;
     margin-bottom: 1vw;
+    max-width: 90%;
+    word-break: break-all;
+    word-wrap: break-word;
 }
 
 .chat_inner_container {

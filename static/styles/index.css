@@ -71,10 +71,18 @@ body {
 }
 
 .profile-picture {
+    margin-right: 1vw;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 7vh;
+    width: 7vh;
+    border-radius: 50%;
+}
+
+.profile-picture-custom {
     padding-right: 1vw;
     margin-top: auto;
     margin-bottom: auto;
-    height: 100%;
     border-radius: 50%;
 }
 
@@ -135,6 +143,11 @@ body {
         width: 6vh;
     }
 
+    .a_nav-icons {
+        margin-right: 1vh;
+        width: 6vh;
+    }
+
     .sidebar-button-image {
         width: 3.5vw;
     }
@@ -147,7 +160,7 @@ body {
 }
 
 .sidebar-button-text {
-    font-size: 3vh;
+    font-size: 2.5vh;
     margin-top: 1vh;
 }
 
@@ -185,6 +198,8 @@ body {
     padding-left: .5vw;
     margin-top: auto;
     margin-bottom: auto;
+    color: black;
+    text-decoration: none;
 }
 
 .post-username-image {
@@ -208,7 +223,6 @@ body {
 .post-image-container {
     padding-top: 1vh;
     padding-bottom: 1vh;
-    display: flex;
     border-bottom: solid gray 1px;
     height: 30vh;
 }
@@ -237,6 +251,11 @@ body {
     margin-right: auto;
 }
 
+.post-image-hidden {
+    height: 0vh;
+    position: absolute;
+}
+
 .posted-date {
     margin-left: auto;
     order: 2;
@@ -248,6 +267,25 @@ body {
 .post-interact-button {
     background-color: rgba(0, 0, 0, 0);
     border: none;
+}
+
+.left-option {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    position: absolute;
+    margin-top: 11.5vh;
+}
+
+.right-option {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    position: absolute;
+    margin-top: 11.5vh;
+    margin-left: 33.5vw;
+}
+
+.variable_images {
+    position: absolute;
 }
 
 .post-interact-likes {
@@ -262,6 +300,15 @@ body {
 
 .post-share-button {
     margin-right: 1vw;
+}
+
+.a_post-share-button {
+    margin-left: auto;
+    margin-right: 1vw;
+}
+
+.a_nav-icons {
+    margin-right: 1vh;
 }
 
 .text-center {
@@ -373,4 +420,21 @@ body {
     position: absolute;
     margin-left: 21.75%;
     height: 6%;
+}
+
+.container_thingy {
+    display: flex;
+    height: 100%;
+}
+
+.attribution {
+    margin-top: 1vh;
+    padding-bottom: 2vh;
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+
+.custom_pfp {
+    border-radius: 50%;
 }
