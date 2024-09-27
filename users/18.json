@@ -1,0 +1,33 @@
+{
+    "age": "18",
+    "chat_rooms": [
+        [
+            "4645945676078536050",
+            "Seb and MissLeota"
+        ]
+    ],
+    "conversation_with": [
+        "2"
+    ],
+    "custom_pfp": false,
+    "description": "Hello World! Welcome to MissLeota's Pyxia page!",
+    "friends": [
+        "18",
+        "2"
+    ],
+    "login_date": null,
+    "logoff_time": 1,
+    "pfp_type": false,
+    "requested": [],
+    "requests": [],
+    "saved_posts": [
+        23
+    ],
+    "settings": {
+        "dark_mode": false,
+        "post_per_page": 10,
+        "sidebar": true
+    },
+    "user_id": 18,
+    "username": "MissLeota"
+}

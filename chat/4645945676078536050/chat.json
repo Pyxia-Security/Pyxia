@@ -1,0 +1,31 @@
+{
+    "chat_name": [
+        "Seb and MissLeota"
+    ],
+    "messages": [
+        [
+            2,
+            "Seb",
+            "Hello Miss!"
+        ],
+        [
+            2,
+            "Seb",
+            "This is a test to show that the messaging service on my website is working!"
+        ],
+        [
+            2,
+            "Seb",
+            "You may notice sometimes throughout that images don't load, or for some weird reason they don't size properly. That can be a selfhosting problem sometimes. But when I host it actually it will be great"
+        ],
+        [
+            2,
+            "Seb",
+            "That should be all! Also quick feature with this. If you want to read the messages, and the thing keeps scrolling down on you, you can disable it!\r\n"
+        ]
+    ],
+    "users": [
+        2,
+        18
+    ]
+}
