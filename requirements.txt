@@ -1,0 +1,11 @@
+Flask
+Flask-Login
+Flask-ReCaptcha
+Flask-SQLAlchemy
+SQLAlchemy
+python-decouple
+argon2-cffi
+pyClamd
+python-magic
+psycopg2-binary
+user_agents
