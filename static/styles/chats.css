@@ -1,0 +1,33 @@
+.chats_container {
+    width: 80vw;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chats_wrapper {
+    margin-top: 1vh;
+    background-color: #DBAFA0;
+    height: auto;
+    border: solid black 2px;
+    border-radius: 10px;
+    min-height: 20vh;
+}
+
+.chat {
+    display: block;
+}
+
+.center {
+    text-align: center;
+    margin-top: 1vh ;
+}
+
+.chat_title {
+    margin-left: 1vh;
+    margin-bottom: 1vh;
+}
+
+ul {
+    margin-bottom: 2vh;
+}
