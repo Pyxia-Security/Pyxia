@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-nz" id="html">
+    <head>
+        <title>Search | Pyxia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <script src="{{ url_for('static', filename='scripts/search.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/anonymous.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/search.css') }}">
+    </head>
+    <body>
+        <header>
+            <img id="exit_address" style="position: absolute;" src="{{ url_for('static', filename='images/exit.png') }}" width="0px" height="0px" alt="exit">
+            <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px" alt="menu">
+            <div class="header-container">
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="100vw" src="{{ url_for('static', filename='images/exit.png') }}" id="opencloseImage" class="nav-icons" alt="exit"></button>
+                <button class="search" onclick="a_search()"><img width="50vw" src="{{ url_for('static', filename='images/search.png') }}" class="a_nav-icons" alt="search"></button> 
+            </div>
+        </header>
+        <div class="container">
+            <div class="side-bar" id="sidebar-container">
+                <div class="sidebar-button-div" id="sidebar">
+                    <button class="sidebar-button" onclick="a_home()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/home.png') }}" width="50vw" alt="home">
+                        <strong class="sidebar-button-text">Home</strong>
+                    </button>
+                    <button class="sidebar-button" onclick="a_trending()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/trending.png') }}" width="50vw" alt="trending">
+                        <strong class="sidebar-button-text">Trending</strong>
+                    </button>
+                    <button class="sidebar-button" onclick="a_clips()"><img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw" alt="clips">
+                        <strong class="sidebar-button-text">Clips</strong>
+                    </button>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-form-container">
+                    <form class="search-form">
+                        <div class="search-box">
+                            <img class="search-icon" src="{{ url_for('static', filename='images/search.png') }}" alt="search">
+                            <input class="search-input" name="search-input" type="text" placeholder="Search Posts" id="search-input-box" maxlength="40" required>
+                        </div>
+                        <input id="search_type" name="type" value="posts" type="hidden">
+                        <div class="search-button-container">
+                            <button class="search-button">
+                                <strong class="search-button-text">Search</strong>
+                            </button>    
+                        </div>
+                    </form>
+                </div>
+                <div class="search-results">
+                    <h2 class="sr-header">Results:</h2>
+                    {% if search_data != None  %}
+                        {% if data == [] %}
+                            <div class="result">
+                                <p class="result-text">No results for that search</p>
+                            </div>
+                        {% else %}
+                            {% for post in data %}
+                                <div class="result">
+                                    <a href="/a/posts/{{ post[0] }}" class="result-link"><p class="result-text">{{ post[1] }}</a> by <a class="result-link">{{ post[3] }}</p></a>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <div class="result">
+                            <p class="result-text">No results for that search</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <br>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-nz" id="html">
+    <head>
+        <title>Pyxia | Log In</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    </head>
+    <body>
+        <h1 class="name">Log In</h1>
+        <div class="login">
+            <form method="post" action="/login">
+                <input class="loginusername" type="text" placeholder="Username" name="username">
+                <br><br>
+                <input class="loginpassword" type="password" placeholder="Password" name="password">
+                <br><br>
+                {{ recaptcha }}
+                <br><br>
+                <input class="loginenter" type="submit" value="Login">
+            </form>
+            {% if error == True %}
+                <p class="error">Your Username or Password was incorrect.</p>
+            {% endif %}
+            <p>Don't have an account? <a href="/signup-ert">Create one here</a></p>
+        </div>
+    </body>
+</html>

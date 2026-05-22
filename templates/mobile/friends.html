@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-nz" id="html">
+    <head>
+        <title>Friends | Pyxia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        {% if dark_theme == True %}
+            <script src="{{ url_for('static', filename='scripts/main_mobile_darkmode.js') }}"></script>
+        {% else %}
+            <script src="{{ url_for('static', filename='scripts/main_mobile.js') }}"></script>
+        {% endif %}
+        {% if dark_theme == True %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/dark_mode_css/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/mobile.css')  }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/dark_mode_css/friends.css') }}">
+        {% else %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/mobile.css')  }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/friends.css')  }}">
+        {% endif %}
+    </head>
+    <body>
+        <header>
+            <img id="exit_address" style="position: absolute;" src="{{ url_for('static', filename='images/exit.png') }}" width="0px" height="0px" alt="exit">
+            <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px" alt="menu">
+            <div class="header-container">
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="{{ url_for('static', filename='images/menu.png') }}" id="opencloseImage" alt="menu"></button>
+                <h1 class="menu-name">Pyxia</h1>
+                {% if profile_pfp[0] == True %}
+                    <button class="account-button" onclick="profile()"><img class="profile-picture nav-icons" height="55vh" width="60vh" src="{{ url_for('static', filename=profile_pfp[1]) }}" alt="profilepfp"></button>
+                {% else %}
+                    <button class="account-button" onclick="profile()"><img class="profile-picture nav-icons" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" alt="profilepfp"></button>
+                {% endif %}
+            </div>
+        </header>
+        <div class="side-bar" id="sidebar-container">
+            <div class="top-buttons-container">
+                <div class="top-buttons">
+                    <button class="menu-search" onclick="add_post()"><img width="60vw" src="{{ url_for('static', filename='images/add_post.png') }}" alt="add_post"></button>
+                    <button class="menu-search" onclick="search()"><img width="60vw" src="{{ url_for('static', filename='images/search.png') }}" alt="search"></button>
+                    <button class="menu-notification" onclick="notification()"><img width="60vw" src="{{ url_for('static', filename='images/notification.png') }}" alt="notification"></button>
+                </div>
+            </div>
+            <div class="sidebar-button-div">
+                <button class="sidebar-button" onclick="home()">
+                    <div class="inner-button-container">
+                        <img class="sidebar-button-image" src="{{ url_for('static', filename='images/home.png') }}" width="50vw" alt="home">
+                        <strong class="sidebar-button-text">Home</strong>
+                    </div>
+                </button>
+            </div>
+            <div class="side_bar_button_container" id="side_bar">
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="friends()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/friends.png') }}" width="50vw" alt="friends">
+                            <strong class="sidebar-button-text">Friends</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="trending()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/trending.png') }}" width="50vw" alt="trending">
+                            <strong class="sidebar-button-text">Trending</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="clips()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw" alt="clips">
+                            <strong class="sidebar-button-text">Clips</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="messages()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw" alt="chat">
+                            <strong class="sidebar-button-text">Messages</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="savedposts()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/bookmark.png') }}" width="50vw" alt="bookmark">
+                            <strong class="sidebar-button-text">Bookmarks</strong>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="friend-container">
+                <div class="fc-topbar">
+                    <h2 class="text-center fc-title">Friends</h2>
+                    <a class="requests-text" href="/pyxia/friends/requests"><h2 class="requests-text">Requests</h2></a>
+                </div> 
+                <div class="fc-inner">
+                    <div class="fc-inner-container">
+                        {% for friend in friends %}
+                            <div class="fc-friend-box">
+                                {% if friend[2][0] == True %}
+                                    <img class="fc-friend-image" height="70vh" width="70vh" src="{{ url_for('static', filename=friend[2][1]) }}" alt="friendpfp">
+                                {% else %}
+                                    <img class="fc-friend-image" height="70vh" width="70vh" src="{{ url_for('static', filename='images/profile.png') }}" alt="friendpfp">
+                                {% endif %}
+                                <a class="fc-friend-name" href="/pyxia/profile/{{ friend[1] }}"><h3 class="fc-friend-name">{{ friend[0] }}</h3></a>
+                                <form class="fc-friend-button" action="/pyxia/friends/remove/{{ friend[1] }}" method="post">
+                                    <button class="fc-friend-button unfriend_center"><img height="50vh" src="{{ url_for('static', filename='images/exit.png') }}" alt="unfriend"></button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

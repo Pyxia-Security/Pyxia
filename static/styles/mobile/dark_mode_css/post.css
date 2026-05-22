@@ -1,0 +1,138 @@
+.comments {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-bottom: 2vh;
+}
+
+.comments-text {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1vw;
+}
+
+.comment-container {
+    height: auto;
+    border: solid black 2px;
+    border-radius: 10px;
+    background-color: #344955;
+    margin-bottom: 2vh;
+}
+
+.comment-top-wrapper {
+    display: flex;
+    margin-bottom: 1vh;
+}
+
+.comment-user-name {
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 1.25em;
+    margin-left: .25vw;
+    text-decoration: none;
+    color: black;
+}
+
+.comment-user-profile {
+    margin-left: .5vw;
+}
+
+.comment-text-wrapper {
+    display: flex;
+    height: 54.25%;
+    margin-bottom: 1.5vh;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+#post-comment-overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(100, 100, 100, 0.5);
+    z-index: 2;
+}
+
+.comment-top {
+    font-size: .85em;
+    margin-bottom: 2vh;
+    display: flex;
+}
+
+.post-comment-text {
+    margin-left: 1vw;
+}
+
+.post-comment-add-button {
+    margin-left: auto;
+    margin-right: 1vw;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+}
+
+.post-comment-wrapper {
+    width: 95vw;
+    height: 40vh;
+    margin: auto;
+}
+
+.post-comment-top {
+    height: 17%;
+    width: 100%;
+    font-size: 1.5em;
+    display: flex;
+    background-color: #344955;
+}
+
+#close-post-comment {
+    position: absolute;
+    margin-left: 81%;
+    height: 6%;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+}
+
+.post-comment-mid {
+    height: 83%;
+    background-color: #344955;
+    width: 100%;
+}
+
+.post-comment-top-text {
+    margin: auto;
+}
+
+.comment-input-container {
+    display: flex;
+    height: 29vh;
+}
+
+.comment-input {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2vh;
+    height: 80%;
+    font-size: 2em;
+    background-color: #78A083;
+}
+
+.comment-submit-container {
+    display: flex;
+    height: 5vh;
+}
+
+.comment-submit {
+    width: 40%;
+    height: 5vh;
+    font-size: 2em;
+    margin: auto;
+    margin-top: -1.5vh;
+    background-color: #78A083;
+}

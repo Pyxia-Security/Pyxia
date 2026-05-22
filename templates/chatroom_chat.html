@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-nz">
+    <head>
+        <title>Chat return</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        {% if dark_theme == True %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/dark_mode_css/chatroomext.css') }}">
+        {% else %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/chatroomext.css') }}">
+        {% endif %}
+    </head>
+    <body id="site">
+        <div class="chat_inner_container">
+            {% if messages == [] %}
+                <div class="message_container">
+                    <div class="message_wrapper">
+                        <h3 class="message">Server: No messages found. Enter a message in the box below.</h3>
+                    </div>
+                </div>
+            {% endif %}
+            {% for message in messages %}
+            <div class="message_container">
+                <div class="message_wrapper">
+                    <h3 class="message">{{ message[1] }}: {{ message[2] }}</h3>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

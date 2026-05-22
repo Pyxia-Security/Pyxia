@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en-nz" id="html">
+    <head>
+        <title>{{ post["title"] }} | Pyxia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        {% if dark_theme == True %}
+            <script src="{{ url_for('static', filename='scripts/main_mobile_darkmode.js') }}"></script>
+        {% else %}
+            <script src="{{ url_for('static', filename='scripts/main_mobile.js') }}"></script>
+        {% endif %}
+        <script src="{{ url_for('static', filename='scripts/post.js') }}"></script>
+        {% if dark_theme == True %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/dark_mode_css/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/mobile.css')  }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/dark_mode_css/post.css') }}">
+        {% else %}
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/index.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/mobile.css')  }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles/mobile/post.css') }}">
+        {% endif %}       
+    </head>
+    <body>
+        <header>
+            <img id="exit_address" style="position: absolute;" src="{{ url_for('static', filename='images/exit.png') }}" width="0px" height="0px" alt="exitmenu">
+            <img id="menu_address" style="position: absolute;" src="{{ url_for('static', filename='images/menu.png') }}" width="0px" height="0px" alt="menu">
+            <div class="header-container">
+                <button class="menu-open" id="opencloseMenu" onclick="openclosemenu()"><img width="50vw" src="{{ url_for('static', filename='images/menu.png') }}" id="opencloseImage" alt="menu"></button>
+                <h1 class="menu-name">Pyxia</h1>
+                {% if profile_pfp[0] == True %}
+                    <button class="account-button" onclick="profile()"><img class="profile-picture nav-icons" height="55vh" width="60vh" src="{{ url_for('static', filename=profile_pfp[1]) }}" alt="profilepfp"></button>
+                {% else %}
+                    <button class="account-button" onclick="profile()"><img class="profile-picture nav-icons" height="45vh" src="{{ url_for('static', filename='images/profile.png') }}" alt="profilepfp"></button>
+                {% endif %}
+            </div>
+        </header>
+        <div id="post-comment-overlay">
+            <div class="post-comment-wrapper">
+                <div class="post-comment-top">
+                    <h2 class="post-comment-top-text">Add Comment</h2>
+                    <button id="close-post-comment" onclick="close_add_comment()">
+                        <img class="close-post-comment-image" src="{{ url_for('static', filename='images/exit.png') }}" height="100%" alt="exit">
+                    </button>
+                </div>
+                <div class="post-comment-mid">
+                    <form action="/pyxia/add_comment/{{ post['post_id'] }}" method="post">
+                        <div class="comment-input-container">
+                            <textarea class="comment-input" maxlength="300" name="comment" required></textarea>
+                        </div>
+                        <div class="comment-submit-container">
+                            <input type="submit" class="comment-submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="share_overlay">
+            <div class="share_wrapper">
+                <div class="share_top">
+                    <h2 class="share_top_text">Share</h2>
+                    <button id="share_top_post" onclick="close_share()">
+                        <img class="close-post-comment-image" src="{{ url_for('static', filename='images/exit.png') }}" height="100%" alt="exit">
+                    </button>
+                </div>
+                <div class="share_text_main">
+                    <div class="share_input_box_container">
+                        <input id="share_link_box" type="text" value="https://pyxia.tech/pyxia" readonly>
+                    </div>
+                    <div class="share_copy_link_container">
+                        <button onclick="copy_link()" class="share_copy_link">Copy Link</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="side-bar" id="sidebar-container">
+            <div class="top-buttons-container">
+                <div class="top-buttons">
+                    <button class="menu-search" onclick="add_post()"><img width="60vw" src="{{ url_for('static', filename='images/add_post.png') }}" alt="add_post"></button>
+                    <button class="menu-search" onclick="search()"><img width="60vw" src="{{ url_for('static', filename='images/search.png') }}" alt="search"></button>
+                    <button class="menu-notification" onclick="notification()"><img width="60vw" src="{{ url_for('static', filename='images/notification.png') }}" alt="notification"></button>
+                </div>
+            </div>
+            <div class="sidebar-button-div">
+                <button class="sidebar-button" onclick="home()">
+                    <div class="inner-button-container">
+                        <img class="sidebar-button-image" src="{{ url_for('static', filename='images/home.png') }}" width="50vw" alt="home">
+                        <strong class="sidebar-button-text">Home</strong>
+                    </div>
+                </button>
+            </div>
+            <div class="side_bar_button_container" id="side_bar">
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="friends()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/friends.png') }}" width="50vw" alt="friends">
+                            <strong class="sidebar-button-text">Friends</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="trending()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/trending.png') }}" width="50vw" alt="trending">
+                            <strong class="sidebar-button-text">Trending</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="clips()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/clips.png') }}" width="50vw" alt="clips">
+                            <strong class="sidebar-button-text">Clips</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="messages()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/chat.png') }}" width="50vw" alt="chat">
+                            <strong class="sidebar-button-text">Messages</strong>
+                        </div>
+                    </button>
+                </div>
+                <div class="sidebar-button-div">
+                    <button class="sidebar-button" onclick="savedposts()">
+                        <div class="inner-button-container">
+                            <img class="sidebar-button-image" src="{{ url_for('static', filename='images/bookmark.png') }}" width="50vw" alt="bookmark">
+                            <strong class="sidebar-button-text">Bookmarks</strong>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="post-container">
+                <div class="post-wrapper">
+                    <div class="posts">
+                        <div class="posts">
+                            <div class="post">
+                                <div class="post-user-account">
+                                    {% if post["custom_pfp"][0] == True %}
+                                        <img class="post-username-image custom_pfp" height="75vh" width="75vh" src="{{ url_for('static', filename=post['custom_pfp'][1]) }}" alt="custompfp">
+                                    {% else %}
+                                        <img class="post-username-image" height="75vh" src="{{ url_for('static', filename='images/profile.png') }}" alt="profile">
+                                    {% endif %}
+                                    <a class="post-username-text" href="/pyxia/profile/{{ post['user_id'] }}"><h2>{{ post["user"] }}</h2></a>
+                                </div>
+                                <div class="post-title">
+                                    <h2>{{ post["title"] }}</h2>
+                                </div>
+                                {% if post["images"] != None %}
+                                    <div class="post-image-container">
+                                        <img class="variable_images" id="{{ post['post_id'] }}_total_image" name="{{ post['total_images'] }}">
+                                        <img class="variable_images" id="{{ post['post_id'] }}_start_image" name="1">
+                                        {% for image in post["images"] %}
+                                            {% if '.mp4' in image %}
+                                                {% if loop.index > 1 %}
+                                                    <div name="{{ loop.index }}" class="post-image-hidden" id="{{ post['post_id'] }}_{{ loop.index }}">
+                                                        <video height="90%" controls id="post_image_{{ post['post_id'] }}_{{ loop.index }}" class="post-image-hidden" >
+                                                            <source src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][loop.index - 1]) }}" type="video/mp4">
+                                                        </video>
+                                                    </div>
+                                                {% else %}
+                                                    <div name="{{ loop.index }}" class="container_thingy" id="{{ post['post_id'] }}_container_thingy">
+                                                        <video height="90%" controls id="post_image_{{ post['post_id'] }}_{{ loop.index }}" class="post-image post-image-video">
+                                                            <source src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][loop.index - 1]) }}" type="video/mp4">
+                                                        </video>
+                                                    </div>
+                                            {% endif %}
+                                            {% else %}
+                                                {% if loop.index > 1 %}
+                                                    <div name="{{ loop.index }}" class="post-image-hidden" id="{{ post['post_id'] }}_{{ loop.index }}">
+                                                        <img id="post_image_{{ post['post_id'] }}_{{ loop.index }}" class="post-image-hidden" src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][0]) }}" alt="postimages">
+                                                    </div>
+                                                {% else %}
+                                                    <div name="{{ loop.index }}" class="container_thingy" id="{{ post['post_id'] }}_container_thingy">
+                                                        <img id="post_image_{{ post['post_id'] }}_{{ loop.index }}" height="auto" class="post-image" src="{{ url_for('load_image', post_id=post['post_id'], filename=post['images'][0]) }}" alt="postimages">
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if post['total_images'] > 1 %}
+                                    <div class="buttons">
+                                        <button onclick="image_left({{ post['post_id'] }})" class="left-option"><img src="{{ url_for('static', filename='images/left.png') }}" height="50vh" alt="leftbutton"></button>
+                                        <button onclick="image_right({{ post['post_id'] }})" class="right-option"><img src="{{ url_for('static', filename='images/right.png') }}" height="50vh" alt="rightbutton"></button>
+                                    </div>
+                                {% endif %}
+                                <div class="post-description">
+                                    <div class="post-description-container">
+                                        <p>{{ post["description"] }}</p>
+                                    </div>
+                                </div>
+                                <div class="post-interaction">
+                                    {% if post["liked"] == "liked" %}
+                                        <button id="like_button_{{post['post_id']}}" onclick="unlike_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/liked.png') }}" alt="liked"></button>
+                                    {% else %}
+                                        <button id="like_button_{{post['post_id']}}" onclick="like_post({{post['post_id']}})" class="post-interact-button"><img id="like_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/like.png') }}" alt="like"></button>
+                                    {% endif %}
+                                    <h2 id="post_likes_{{post['post_id']}}" class="post-interact-likes">{{ post["likes"] }}</h2>
+                                    {% if post["bookmarked"] == "bookmarked" %}
+                                        <button id="bookmark_button_{{post['post_id']}}" onclick="unsave_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmarked.png') }}" alt="bookmarked"></button>
+                                    {% else %}
+                                        <button id="bookmark_button_{{post['post_id']}}" onclick="save_post({{post['post_id']}})" class="post-interact-button post-bookmark-button"><img id="bookmark_button_img_{{post['post_id']}}" height="50vh" src="{{ url_for('static', filename='images/bookmark.png') }}" alt="bookmark"></button>
+                                    {% endif %}
+                                    <button onclick="open_share({{post['post_id']}})" class="post-interact-button post-share-button"><img height="50vh" src="{{ url_for('static', filename='images/share.png') }}" alt="share"></button>
+                                </div>
+                                <div class="comment-top">
+                                    <h2 class="post-comment-text">Comments:</h2>
+                                    <button class="post-comment-add-button" onclick="open_add_comment()">
+                                        <strong>Add Comment</strong>
+                                    </button>
+                                </div>
+                                <div class="comments">
+                                    {% for comment in comments %}
+                                        <div class="comment-container">
+                                            <div class="comment-top-wrapper">
+                                                <a href='/pyxia/profile/{{ comment["user_id"] }}' class="comment-user-name"><h2 class="comment-user-name">{{ comment["user"] }}</h2></a>
+                                            </div>
+                                            <div class="comment-text-wrapper">
+                                                <h2 class="comments-text">{{ comment["content"] }}</h2>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </body>
+</html>
