@@ -1,3 +1,9 @@
+# Pyxia
+Pyxia is a Privacy Focused, and Open Source Social Media, where we put Privacy before profit. 
+
+## History
+I created Pyxia as my NCEA Level 2 Digital Technologies Project. I gained 16 excellence credits from the documentation and creation of it.
+
 ### Setup Database
 
 After installing PSQL, follow these steps (instructions are for Linux; Windows will be similar but may vary).
